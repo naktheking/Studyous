@@ -3,6 +3,11 @@ const express = require("express");
 const app = express();
 const PORT = 3000;
 
+app.use(cors({
+  orgin: "http://localhost:5173",
+  credentials: true
+}));
+
 app.use(express.json());
 
 // In-memory user storage
@@ -20,7 +25,6 @@ app.post("/api/signup", (req, res) => {
     return res.status(400).json({ error: "Username already exists" });
   }
 
-  // Store user (NOTE: passwords should be hashed in production!)
   users[username] = { password };
 
   res.status(201).json({ message: "Account created successfully" });
