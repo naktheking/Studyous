@@ -1,5 +1,5 @@
 const express = require("express");
-
+const cors=require("cors");
 const app = express();
 const PORT = 3000;
 
@@ -26,7 +26,7 @@ app.post("/api/signup", (req, res) => {
   }
 
   users[username] = { password };
-
+  console.log("Current users:", users);
   res.status(201).json({ message: "Account created successfully" });
 });
 
