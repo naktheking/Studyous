@@ -5,33 +5,40 @@ const PORT = 3000;
 
 app.use(express.json());
 
-// Home route
-app.get("/", (req, res) => {
-  res.send("Hello from Node.js!");
+// In-memory user storage
+const users = {};
+
+// Sign up endpoint
+app.post("/api/signup", (req, res) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    return res.status(400).json({ error: "Username and password required" });
+  }
+
+  if (users[username]) {
+    return res.status(400).json({ error: "Username already exists" });
+  }
+
+  // Store user (NOTE: passwords should be hashed in production!)
+  users[username] = { password };
+
+  res.status(201).json({ message: "Account created successfully" });
 });
 
-// Example API route
-app.get("/api/users", (req, res) => {
-  const users = [
-    { id: 1, name: "Alice" },
-    { id: 2, name: "Bob" },
-    { id: 3, name: "Charlie" }
-  ];
 
-  res.json(users);
+
+// Login endpoint
+app.post("/api/login", (req, res) => {
+  const { username, password } = req.body;
+
+  if (!users[username] || users[username].password !== password) {
+    return res.status(401).json({ error: "Invalid username or password" });
+  }
+
+  res.json({ message: "Login successful", username });
 });
 
-// Example POST route
-app.post("/api/users", (req, res) => {
-  const newUser = req.body;
-
-  res.status(201).json({
-    message: "User created successfully",
-    user: newUser
-  });
-});
-
-// Start server
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
