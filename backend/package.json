@@ -1,0 +1,13 @@
+{
+  "name": "Studyous",
+  "version": "1.0.0",
+  "description": "An app that lets you study with your friends more effectively",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
