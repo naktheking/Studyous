@@ -11,6 +11,35 @@ function Post({post, setPost}){
     useEffect(() => {
         setComplete(title && location && startTime && endTime && date);
     }, [title, location, startTime, endTime, date]);
+
+    const handlePost = async (e) => {
+        e.preventDefault();
+
+        try {
+           const response = await fetch('http://localhost:3000/create-post', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ title, location, startTime, endTime, date })
+          }); //hi
+
+          const data = await response.json();
+
+          if (response.ok) {
+            setMessage('Posted!');
+            setTitle('');
+            setLocation('');
+            setStartTime('');
+            setEndTime('');
+            setDate('');
+          } else {
+            setMessage(data.error);
+          }
+        }
+        catch (err) {
+          setMessage('Error: ' + err.message);
+        }
+    };
+
     return (
         <div className="logged-in-container">
         {post ? (
@@ -59,10 +88,11 @@ function Post({post, setPost}){
                 />
               </div>
               <button type="button" onClick={() => setPost(false)}>Cancel</button>
-              <button type={complete ? "submit" : "button"} onClick={(e) => {
+                <button type={complete ? "submit" : "button"} onClick={(e) => {
                 e.preventDefault();
                 // Handle post submission   
               }}>Submit Post</button>
+              <button type="submit">Submit Post</button>
             </form>
           ) : (
             <button className="post-button" onClick={() => setPost(true)}>post</button>
