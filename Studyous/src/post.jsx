@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 function Post({post, setPost}){
     const [title, setTitle] = useState('');
@@ -6,7 +6,11 @@ function Post({post, setPost}){
     const [startTime, setStartTime] = useState('');
     const [endTime, setEndTime] = useState('');
     const [date, setDate] = useState('');
-
+    const [complete, setComplete] = useState(false);
+    
+    useEffect(() => {
+        setComplete(title && location && startTime && endTime && date);
+    }, [title, location, startTime, endTime, date]);
     return (
         <div className="logged-in-container">
         {post ? (
@@ -55,7 +59,10 @@ function Post({post, setPost}){
                 />
               </div>
               <button type="button" onClick={() => setPost(false)}>Cancel</button>
-              <button type="submit">Submit Post</button>
+              <button type={complete ? "submit" : "button"} onClick={(e) => {
+                e.preventDefault();
+                // Handle post submission   
+              }}>Submit Post</button>
             </form>
           ) : (
             <button className="post-button" onClick={() => setPost(true)}>post</button>

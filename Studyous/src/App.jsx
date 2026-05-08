@@ -9,8 +9,6 @@ function App() {
   const [loggedInUser, setLoggedInUser] = useState('');
   const [post, setPost] = useState(false);
 
-
-
   return (
     <div className="App">
       <div className="header">
