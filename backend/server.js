@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 import accountRouter from "./route/account.js";
 
 dotenv.config();
-
+const cors=require("cors");
 const app = express();  
 const PORT = 3000;
 
