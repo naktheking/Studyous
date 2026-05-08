@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 import accountRouter from "./route/account.js";
 
 dotenv.config();
-const cors=require("cors");
+
 const app = express();  
 const PORT = 3000;
 
@@ -20,7 +20,7 @@ mongoose.connect(process.env.MONGODB_URI)
  .then(() => console.log("Connected to MongoDB"))
  .catch((err) => console.log(err));
 
- app.use(accountRouter);
+app.use(accountRouter);
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
