@@ -1,89 +1,35 @@
 import { useState } from 'react';
 import './App.css';
+import Post from './post';
+import Login from './login';
 
 function App() {
   const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loggedInUser, setLoggedInUser] = useState('');
+  const [post, setPost] = useState(false);
 
-  const handleSignup = async (e) => {
-    e.preventDefault();
-    
-    try {
-      const response = await fetch('http://localhost:3000/api/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-      });
 
-      const data = await response.json();
-      
-      if (response.ok) {
-        setMessage('Account created! Try logging in.');
-        setUsername('');
-        setPassword('');
-      } else {
-        setMessage(data.error);
-      }
-    } catch (err) {
-      setMessage('Error: ' + err.message);
-    }
-  };
-
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    
-    try {
-      const response = await fetch('http://localhost:3000/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-      });
-
-      const data = await response.json();
-      
-      if (response.ok) {
-        setMessage('Login successful!');
-        setIsLoggedIn(true);
-        setUsername('');
-        setPassword('');
-      } else {
-        setMessage(data.error);
-      }
-    } catch (err) {
-      setMessage('Error: ' + err.message);
-    }
-  };
 
   return (
     <div className="App">
-      <h1>Studyous</h1>
+      <div className="header">
+        <h1>Studyous</h1>
+        {isLoggedIn && (
+          <div className="user-section">
+            <div className="username-display">{loggedInUser}</div>
+            <button className="logout-button" onClick={() => {
+              setIsLoggedIn(false);
+              setLoggedInUser('');
+            }}>Logout</button>
+          </div>
+        )}
+      </div>
       
       {isLoggedIn ? (
-        <div>
-          <h2>Welcome!</h2>
-          <button onClick={() => setIsLoggedIn(false)}>Logout</button>
-        </div>
+        <Post post={post} setPost={setPost} />
       ) : (
-        <form onSubmit={handleSignup}>
-          <h2>Create Account</h2>
-          <input
-            type="text"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <button type="submit">Sign Up</button>
-          <button type="button" onClick={handleLogin}>Login</button>
-          {message && <p>{message}</p>}
-        </form>
+        <Login setIsLoggedIn={setIsLoggedIn} setLoggedInUser={setLoggedInUser} setUsername={setUsername} username={username} />
       )}
     </div>
   );
