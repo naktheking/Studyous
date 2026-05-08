@@ -1,10 +1,11 @@
-const express = require("express");
+import cors from "cors";
+import express from "express"
 
 const app = express();
 const PORT = 3000;
 
 app.use(cors({
-  orgin: "http://localhost:5173",
+  origin: "http://localhost:5173",
   credentials: true
 }));
 
@@ -29,7 +30,6 @@ app.post("/api/signup", (req, res) => {
 
   res.status(201).json({ message: "Account created successfully" });
 });
-
 
 
 // Login endpoint
