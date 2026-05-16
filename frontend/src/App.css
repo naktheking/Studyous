@@ -32,6 +32,13 @@
   flex-grow: 1;
 }
 
+.friend_req_bar{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  justify-content:left;
+}
+
 .post-form {
   display: flex;
   flex-direction: column;

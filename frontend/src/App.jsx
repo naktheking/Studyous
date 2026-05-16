@@ -2,7 +2,7 @@ import { useState } from 'react';
 import './App.css';
 import Post from './post';
 import Login from './login';
-
+import FriendRequest from './friends';
 function App() {
   const [username, setUsername] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -25,7 +25,10 @@ function App() {
       </div>
       
       {isLoggedIn ? (
-        <Post post={post} setPost={setPost} />
+        <>
+          <Post post={post} setPost={setPost} />
+          <FriendRequest />
+        </>
       ) : (
         <Login setIsLoggedIn={setIsLoggedIn} setLoggedInUser={setLoggedInUser} setUsername={setUsername} username={username} />
       )}

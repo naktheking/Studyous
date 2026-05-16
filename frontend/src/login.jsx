@@ -7,7 +7,7 @@ function Login({ setIsLoggedIn, setLoggedInUser, setUsername, username}) {
         e.preventDefault();
     
         try {
-        const response = await fetch('http://localhost:3000/api/signup', {
+        const response = await fetch('http://localhost:3000/create-account', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, password })
@@ -31,15 +31,14 @@ function Login({ setIsLoggedIn, setLoggedInUser, setUsername, username}) {
         e.preventDefault();
     
         try {
-            const response = await fetch('http://localhost:3000/api/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password })
+            const response = await fetch(`http://localhost:3000/get-account?username=${username}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
         });
 
         const data = await response.json();
       
-        if (response.ok) {
+        if (data && data.username === username) {
             setMessage('Login successful!');
             setLoggedInUser(username);
             setIsLoggedIn(true);
@@ -47,7 +46,7 @@ function Login({ setIsLoggedIn, setLoggedInUser, setUsername, username}) {
             setPassword('');
         } 
         else {
-            setMessage(data.error);
+            setMessage('User not found');
         }
         } catch (err) {
             setMessage('Error: ' + err.message);
