@@ -7,6 +7,7 @@ function Post({post, setPost}){
     const [endTime, setEndTime] = useState('');
     const [date, setDate] = useState('');
     const [complete, setComplete] = useState(false);
+    const [message, setMessage] = useState('');
     
     useEffect(() => {
         setComplete(title && location && startTime && endTime && date);
@@ -88,14 +89,12 @@ function Post({post, setPost}){
                 />
               </div>
               <button type="button" onClick={() => setPost(false)}>Cancel</button>
-                <button type={complete ? "submit" : "button"} onClick={(e) => {
-                e.preventDefault();
-                // Handle post submission   
+              <button type={complete ? "submit" : "button"} onClick={(e) => {
+              e.preventDefault(); // Handle post submission   
               }}>Submit Post</button>
-              <button type="submit">Submit Post</button>
             </form>
           ) : (
-            <button className="post-button" onClick={() => setPost(true)}>post</button>
+            <button className="post-button" onClick={() => setPost(true)}>Make Post</button>
           )}
         </div>
     );
