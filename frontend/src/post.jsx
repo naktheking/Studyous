@@ -17,7 +17,7 @@ function Post({post, setPost}){
         e.preventDefault();
 
         try {
-           const response = await fetch('http://localhost:3000/create-post', {
+           const response = await fetch('http://localhost:3000/post/create-post', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ title, location, startTime, endTime, date })
@@ -44,7 +44,7 @@ function Post({post, setPost}){
     return (
         <div className="logged-in-container">
         {post ? (
-            <form className="post-form">
+            <form className="post-form" onSubmit={handlePost}>
               <h2>Create a Post</h2>
               <div className="form-group">
                 <label>Title</label>
@@ -89,9 +89,7 @@ function Post({post, setPost}){
                 />
               </div>
               <button type="button" onClick={() => setPost(false)}>Cancel</button>
-              <button type={complete ? "submit" : "button"} onClick={(e) => {
-              e.preventDefault(); // Handle post submission   
-              }}>Submit Post</button>
+              <button type="submit" disabled={!complete}>Submit Post</button>
             </form>
           ) : (
             <button className="post-button" onClick={() => setPost(true)}>Make Post</button>

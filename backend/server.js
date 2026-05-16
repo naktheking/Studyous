@@ -3,6 +3,7 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import accountRouter from "./route/account.js";
+import postRouter from "./route/post.js";
 
 dotenv.config();
 
@@ -21,6 +22,7 @@ mongoose.connect(process.env.MONGODB_URI)
  .catch((err) => console.log(err));
 
 app.use("/account", accountRouter);
+app.use("/post", postRouter);
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
