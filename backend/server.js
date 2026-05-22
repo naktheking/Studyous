@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import accountRouter from "./route/account.js";
 import postRouter from "./route/post.js";
+import friendRouter from "./route/friend.js";
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ mongoose.connect(process.env.MONGODB_URI)
 
 app.use("/account", accountRouter);
 app.use("/post", postRouter);
+app.use("/friend", friendRouter);
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);

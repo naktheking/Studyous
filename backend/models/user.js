@@ -3,7 +3,9 @@ import mongoose from "mongoose";
 const MessageSchema = new mongoose.Schema(
   {
     username: String,
-    password: String
+    password: String,
+    pendingFriendRequests: [String],
+    friendList: [String]
   }
 );
 
