@@ -26,7 +26,7 @@ function App() {
       
       {isLoggedIn ? (
         <>
-          <Post post={post} setPost={setPost} />
+          <Post post={post} setPost={setPost} userName={username} />
           <FriendRequest />
         </>
       ) : (

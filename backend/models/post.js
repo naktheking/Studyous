@@ -3,10 +3,10 @@ import mongoose from "mongoose";
 const MessageSchema = new mongoose.Schema(
   {
     person: String,
-    startTime: Number,
-    endTime: Number,
+    startTime: String,
+    endTime: String,
     location: String,
-    subject: String,
+    date: String,
   },
 
   {timestamps: true}

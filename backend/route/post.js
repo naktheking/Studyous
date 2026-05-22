@@ -5,8 +5,9 @@ const router = express.Router();
 
 router.post("/create-post", async (req, res) => {
   try {
-    const { person, startTime, endTime, location, subject } = req.body;
-    const post = await Post.create({ person, startTime, endTime, location, subject });
+    console.log("got post");
+    const { person, startTime, endTime, location, date } = req.body;
+    const post = await Post.create({ person, startTime, endTime, location, date });
     res.json(post);
 
   } catch (err) {

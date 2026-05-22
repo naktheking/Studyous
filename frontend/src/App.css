@@ -27,16 +27,39 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   gap: 20px;
   flex-grow: 1;
+  padding-bottom: 20px;
 }
 
 .friend_req_bar{
   display:flex;
   flex-direction:column;
   gap:10px;
-  justify-content:left;
+  align-items: stretch;
+  position: fixed;
+  right: 20px;
+  top: 105px;
+}
+
+.friend_req_bar input {
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  font-size: 14px;
+  background-color: var(--surface);
+  color: var(--text);
+}
+
+.friend_req_bar button {
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  font-size: 14px;
+  background-color: var(--surface);
+  color: var(--text);
+  cursor: pointer;
 }
 
 .post-form {
