@@ -5,11 +5,14 @@ function FriendRequest({ loggedInUser })
     const [username, setUsername] = useState('');
     const [sendRequest, setSendRequest] = useState(false);
     const [incomingRequests, setIncomingRequests] = useState([]);
+    const [friends, setFriends] = useState([]);
+    const [isOpen, setIsOpen] = useState(false);
 
     useEffect(() => {
-        // Fetch incoming friend requests when user logs in
+        // Fetch incoming friend requests and friend list when user logs in
         if (loggedInUser) {
             fetchIncomingRequests();
+            fetchFriends();
         }
     }, [loggedInUser]);
 
@@ -26,6 +29,21 @@ function FriendRequest({ loggedInUser })
             }
         } catch (err) {
             console.error('Error fetching incoming requests:', err);
+        }
+    };
+
+    const fetchFriends = async () => {
+        try {
+            const response = await fetch(`http://localhost:3000/friend/get-friends/${loggedInUser}`);
+            const data = await response.json();
+
+            if (data.success) {
+                setFriends(data.friends);
+            } else {
+                console.error('Error fetching friends:', data.message);
+            }
+        } catch (err) {
+            console.error('Error fetching friends:', err);
         }
     };
 
@@ -70,6 +88,7 @@ function FriendRequest({ loggedInUser })
             if (data.success) {
                 console.log('Friend request accepted!');
                 setIncomingRequests(incomingRequests.filter(req => req !== fromUsername));
+                setFriends((prev) => [...prev, fromUsername]);
             } else {
                 console.error('Error accepting request:', data.message);
             }
@@ -103,78 +122,94 @@ function FriendRequest({ loggedInUser })
     };
 
     
-    return(
-        <div className="friend_req_bar">
-        <input
-            type="text"
-            placeholder="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        <button 
-            onClick={handleSendFriendRequest}
-            disabled={!username}
-            style={{
-                backgroundColor: username ? '#007bff' : 'var(--surface)',
-                color: username ? 'white' : 'var(--text)'
-            }}
-        >
-          Send Friend Request
-        </button>
+        return(
+                <div className="friend-panel">
+                    <button
+                        className={`heart-button friend-toggle ${isOpen ? 'is-active' : ''}`}
+                        onClick={() => setIsOpen((prev) => !prev)}
+                        aria-label="Toggle friends panel"
+                        title="Toggle friends panel"
+                        type="button"
+                    >
+                        ♥
+                    </button>
+                    {isOpen && (
+                        <div className="friend_req_bar">
+                            <input
+                                    type="text"
+                                    placeholder="username"
+                                    value={username}
+                                    onChange={(e) => setUsername(e.target.value)}
+                                />
+                            <button 
+                                    onClick={handleSendFriendRequest}
+                                    disabled={!username}
+                                    style={{
+                                            backgroundColor: username ? '#007bff' : 'var(--surface)',
+                                            color: username ? 'white' : 'var(--text)'
+                                    }}
+                            >
+                                Send
+                            </button>
 
-        <div style={{ marginTop: '20px' }}>
-          <h3>Incoming Friend Requests</h3>
-          {incomingRequests.length > 0 ? (
-            <div>
-              {incomingRequests.map((request, index) => (
-                <div key={index} style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  padding: '10px',
-                  borderBottom: '1px solid var(--border)',
-                  marginBottom: '8px'
-                }}>
-                  <span style={{ textAlign: 'left' }}>{request}</span>
-                  <div style={{ display: 'flex', gap: '8px' }}>
-                    <button 
-                      onClick={() => handleAcceptRequest(request)}
-                      style={{
-                        backgroundColor: '#28a745',
-                        color: 'white',
-                        border: 'none',
-                        padding: '6px 12px',
-                        borderRadius: '4px',
-                        cursor: 'pointer',
-                        fontSize: '16px'
-                      }}
-                    >
-                      ✓
-                    </button>
-                    <button 
-                      onClick={() => handleRejectRequest(request)}
-                      style={{
-                        backgroundColor: '#dc3545',
-                        color: 'white',
-                        border: 'none',
-                        padding: '6px 12px',
-                        borderRadius: '4px',
-                        cursor: 'pointer',
-                        fontSize: '16px'
-                      }}
-                    >
-                      ✕
-                    </button>
-                  </div>
+                            <div style={{ marginTop: '20px' }}>
+                                <h3 className="incoming-requests-title">Incoming Friend Requests</h3>
+                                {incomingRequests.length > 0 ? (
+                                    <div>
+                                        <div className="incoming-request-item">
+                                            <span className="incoming-request-name">{incomingRequests[0]}</span>
+                                            <div className="incoming-request-actions">
+                                                <button 
+                                                    onClick={() => handleAcceptRequest(incomingRequests[0])}
+                                                    style={{
+                                                        backgroundColor: '#28a745',
+                                                        color: 'white',
+                                                        border: 'none',
+                                                        padding: '6px 12px',
+                                                        borderRadius: '4px',
+                                                        cursor: 'pointer',
+                                                        fontSize: '16px'
+                                                    }}
+                                                >
+                                                    ✓
+                                                </button>
+                                                <button 
+                                                    onClick={() => handleRejectRequest(incomingRequests[0])}
+                                                    style={{
+                                                        backgroundColor: '#dc3545',
+                                                        color: 'white',
+                                                        border: 'none',
+                                                        padding: '6px 12px',
+                                                        borderRadius: '4px',
+                                                        cursor: 'pointer',
+                                                        fontSize: '16px'
+                                                    }}
+                                                >
+                                                    ✕
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <p>No incoming requests</p>
+                                )}
+                            </div>
+                            <div className="friend-list-panel">
+                                <h3 className="incoming-requests-title">Friends</h3>
+                                {friends.length > 0 ? (
+                                    <ul className="friend-list">
+                                        {friends.map((friend) => (
+                                            <li key={friend} className="friend-list-item">{friend}</li>
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <p>No friends yet</p>
+                                )}
+                            </div>
+                        </div>
+                    )}
                 </div>
-              ))}
-            </div>
-          ) : (
-            <p>No incoming requests</p>
-          )}
-        </div>
-        </div>
-    )
+        )
     
 }
 export default FriendRequest;

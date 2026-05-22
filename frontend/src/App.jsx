@@ -25,10 +25,12 @@ function App() {
       </div>
       
       {isLoggedIn ? (
-        <>
-          <Post post={post} setPost={setPost} userName={username} />
+        <div className="content-row">
+          <div className="post-column">
+            <Post post={post} setPost={setPost} userName={username} />
+          </div>
           <FriendRequest loggedInUser={loggedInUser} />
-        </>
+        </div>
       ) : (
         <Login setIsLoggedIn={setIsLoggedIn} setLoggedInUser={setLoggedInUser} setUsername={setUsername} username={username} />
       )}

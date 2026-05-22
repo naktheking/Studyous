@@ -36,6 +36,20 @@ router.get("/get-requests/:username", async (req, res) => {
   }
 });
 
+router.get("/get-friends/:username", async (req, res) => {
+  try {
+    const user = await User_account.findOne({ username: req.params.username });
+
+    if (!user) {
+      return res.json({ success: false, message: "User not found" });
+    }
+
+    res.json({ success: true, friends: user.friendList });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 router.post("/accept-request", async (req, res) => {
   try {
     const { toUsername, fromUsername } = req.body;
