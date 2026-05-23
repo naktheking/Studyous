@@ -20,8 +20,8 @@ function Post({post, setPost}){
            const response = await fetch('http://localhost:3000/post/create-post', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ title, location, startTime, endTime, date })
-          }); //hi
+              body: JSON.stringify({ username, title, location, startTime, endTime, date })
+          });
 
           const data = await response.json();
 

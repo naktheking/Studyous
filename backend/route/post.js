@@ -1,12 +1,17 @@
 import express from "express";
 import Post from "../models/post.js";
+import User_account from "../models/user.js"
 
 const router = express.Router();
 
 router.post("/create-post", async (req, res) => {
   try {
-    const { title, location, date, startTime, endTime } = req.body;
+    const { username, title, location, date, startTime, endTime } = req.body;
+
+    const user = await User_account.findOne({username});
+
     const post = await Post.create({ 
+      username: user.username,
       title, 
       location,
       date,
