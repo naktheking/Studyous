@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-function Login({ setIsLoggedIn, setLoggedInUser, setUsername, username}) {
+function Login({ setIsLoggedIn, setLoggedInUser, setUsername, username }) {
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
     const handleSignup = async (e) => {

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-function Post({post, setPost, person}){
+function Post({ post, setPost, person }){
   const [title, setTitle] = useState('');
   const [location, setLocation] = useState('');
   const [startTime, setStartTime] = useState('');
@@ -15,8 +15,7 @@ function Post({post, setPost, person}){
 
   const handlePost = async (e) => {
       e.preventDefault();
-      console.log("Person: ");
-      console.log(person);
+
       try {
           const response = await fetch('http://localhost:3000/post/create-post', {
             method: 'POST',
@@ -44,7 +43,7 @@ function Post({post, setPost, person}){
 
   return (
       <div className="logged-in-container">
-      {post ? (
+      { post ? (
           <form className="post-form" onSubmit={handlePost}>
             <h2>Create a Post</h2>
             <div className="form-group">
