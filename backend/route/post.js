@@ -6,12 +6,20 @@ const router = express.Router();
 
 router.post("/create-post", async (req, res) => {
   try {
-    const { username, title, location, date, startTime, endTime } = req.body;
+    const { person, title, location, date, startTime, endTime } = req.body;
 
-    const user = await User_account.findOne({username});
+    const user = await User_account.findOne({
+      username: person
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        error: "User not found"
+      });
+    }
 
     const post = await Post.create({ 
-      username: user.username,
+      person: user.username,
       title, 
       location,
       date,
