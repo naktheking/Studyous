@@ -6,6 +6,7 @@ function Post({post, setPost, userName}){
     const [endTime, setEndTime] = useState('');
     const [date, setDate] = useState('');
     const [complete, setComplete] = useState(false);
+    const [message, setMessage] = useState('');
     
     useEffect(() => {
         setComplete(location && startTime && endTime && date);
@@ -87,7 +88,7 @@ function Post({post, setPost, userName}){
                 <button type={complete ? "submit" : "button"} onClick={handlePost}>Submit Post</button>
             </form>
           ) : (
-            <button className="post-button" onClick={() => setPost(true)}>post</button>
+            <button className="post-button" onClick={() => setPost(true)}>Make Post</button>
           )}
         </div>
     );

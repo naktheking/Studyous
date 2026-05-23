@@ -1,15 +1,15 @@
 import mongoose from "mongoose";
 
-const MessageSchema = new mongoose.Schema(
+const PostSchema = new mongoose.Schema(
   {
-    person: String,
-    startTime: String,
-    endTime: String,
+    title: String,
     location: String,
     date: String,
+    startTime: String,
+    endTime: String
   },
 
   {timestamps: true}
 );
 
-export default mongoose.model("Post", MessageSchema);
+export default mongoose.model("Post", PostSchema);
