@@ -6,9 +6,16 @@ const router = express.Router();
 router.post("/create-account", async (req, res) => {
   try {
     const { username, password } = req.body;
+    
+    const existingAccount = await User_account.findOne({ username });
+
+    if (existingAccount) {
+      return res.status(409).json({ error: "account already created" });
+    }
+    
     const account = await User_account.create({ username, password });
-  
-    res.json(account);
+    res.status(201).json(account);
+
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
