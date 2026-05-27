@@ -7,10 +7,13 @@ const PostSchema = new mongoose.Schema(
     location: String,
     date: String,
     startTime: String,
-    endTime: String
+    endTime: String,
+    likes: {
+      type: [String], // array of usernames who liked the post
+      default: []
+    }
   },
-
-  {timestamps: true}
+  { timestamps: true }
 );
 
 export default mongoose.model("Post", PostSchema);

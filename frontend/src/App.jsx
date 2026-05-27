@@ -29,7 +29,7 @@ function App() {
       {isLoggedIn ? (
         <>
           <Post post={post} setPost={setPost} person={loggedInUser} />
-          <FriendRequest />
+          <FriendRequest person={loggedInUser} />
           <PostStats stats={stats} setStats={setStats} person={loggedInUser} />
         </>
       ) : (
