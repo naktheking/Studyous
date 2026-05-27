@@ -4,9 +4,9 @@ import Post from './post';
 import Login from './login';
 import FriendRequest from './friends';
 function App() {
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState('');  //only for login/signup form
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [loggedInUser, setLoggedInUser] = useState('');
+  const [loggedInUser, setLoggedInUser] = useState('');  //for when they are already logged in
   const [post, setPost] = useState(false);
 
   return (
@@ -23,11 +23,10 @@ function App() {
           </div>
         )}
       </div>
-      
       {isLoggedIn ? (
         <div className="content-row">
           <div className="post-column">
-            <Post post={post} setPost={setPost} userName={username} />
+            <Post post={post} setPost={setPost} userName={loggedInUser} />
           </div>
           <FriendRequest loggedInUser={loggedInUser} />
         </div>
