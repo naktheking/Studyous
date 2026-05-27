@@ -3,11 +3,13 @@ import './App.css';
 import Post from './post';
 import Login from './login';
 import FriendRequest from './friends';
+import PostStats from './statistics'
 function App() {
   const [username, setUsername] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loggedInUser, setLoggedInUser] = useState('');
   const [post, setPost] = useState(false);
+  const [stats, setStats] = useState(false);
 
   return (
     <div className="App">
@@ -26,8 +28,9 @@ function App() {
       
       {isLoggedIn ? (
         <>
-          <Post post={post} setPost={setPost} userName={username} />
+          <Post post={post} setPost={setPost} person={loggedInUser} />
           <FriendRequest />
+          <PostStats stats={stats} setStats={setStats} person={loggedInUser} />
         </>
       ) : (
         <Login setIsLoggedIn={setIsLoggedIn} setLoggedInUser={setLoggedInUser} setUsername={setUsername} username={username} />
