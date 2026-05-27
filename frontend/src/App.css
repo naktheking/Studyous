@@ -6,6 +6,10 @@
   border-bottom: 1px solid var(--border);
 }
 
+:root {
+  --friends-panel-width: 187px;
+}
+
 .header h1 {
   margin: 0;
 }
@@ -33,14 +37,54 @@
   padding-bottom: 20px;
 }
 
+.content-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 24px;
+  padding: 20px;
+}
+
+.post-column {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+@media (max-width: 900px) {
+  .content-row {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .post-column {
+    width: 100%;
+  }
+
+  .friend-panel {
+    position: static;
+    width: 100%;
+    max-width: 320px;
+  }
+}
+
+.friend-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  width: var(--friends-panel-width);
+  margin-top: 0;
+  position: sticky;
+  top: 100px;
+}
+
 .friend_req_bar{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   align-items: stretch;
-  position: fixed;
-  right: 20px;
-  top: 105px;
+  width: var(--friends-panel-width);
 }
 
 .friend_req_bar input {
@@ -60,6 +104,57 @@
   background-color: var(--surface);
   color: var(--text);
   cursor: pointer;
+}
+
+.incoming-requests-title {
+  font-size: 12px;
+  margin: 0 0 8px;
+}
+
+.incoming-request-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  borderBottom: 1px solid var(--border);
+  marginBottom: 8px;
+}
+
+.incoming-request-name {
+  flex: 1;
+  text-align: left;
+}
+
+.incoming-request-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.friend-list-panel {
+  margin-top: 12px;
+  width: 100%;
+}
+
+.friend-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  height: 300px;
+  overflow-y: scroll;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background-color: var(--surface);
+}
+
+.friend-list-item {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+
+.friend-list-item:last-child {
+  border-bottom: none;
 }
 
 .post-form {
@@ -163,6 +258,35 @@
 
 .logout-button:hover {
   background-color: var(--accent-bg);
+}
+
+.heart-button {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: #e11d48;
+  font-size: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
+}
+
+.heart-button:hover {
+  background-color: var(--accent-bg);
+  transform: translateY(-1px);
+}
+
+.heart-button.is-active {
+  box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.2);
+  background-color: rgba(225, 29, 72, 0.08);
+}
+
+.friend-toggle {
+  align-self: flex-end;
 }
 
 .counter {

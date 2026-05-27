@@ -3,7 +3,9 @@ import mongoose from "mongoose";
 const UserSchema = new mongoose.Schema(
   {
     username: String,
-    password: String
+    password: String,
+    pendingFriendRequests: [String],
+    friendList: [String]
   }
 );
 
