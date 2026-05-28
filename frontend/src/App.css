@@ -85,9 +85,10 @@
   gap: 10px;
   align-items: stretch;
   position: fixed;
-  right: 20px;
+  right: 208px;
   top: 105px;
-  width: 280px;
+  width: 188px; 
+  animation: slideIn 0.3s ease-out;
 }
 
 .friend_req_bar input {
@@ -291,6 +292,30 @@
   background-color: var(--accent-bg);
 }
 
+.create-post-button {
+  font-size: 18px;
+  padding: 14px 48px;
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+  letter-spacing: 0.5px;
+}
+
+.create-post-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+}
+
+.create-post-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 10px rgba(0, 123, 255, 0.3);
+}
+
 .heart-button {
   width: 36px;
   height: 36px;
@@ -303,15 +328,16 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
+  transition: transform 0.3s, background-color 0.2s, box-shadow 0.2s;
 }
 
-.heart-button:hover {
+.heart-button:hover:not(.is-active) {
   background-color: var(--accent-bg);
   transform: translateY(-1px);
 }
 
 .heart-button.is-active {
+  transform: translateX(-220px);
   box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.2);
   background-color: rgba(225, 29, 72, 0.08);
 }
@@ -389,6 +415,17 @@
   @media (max-width: 1024px) {
     padding: 32px 20px 24px;
     gap: 18px;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
 }
 
