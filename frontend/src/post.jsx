@@ -32,6 +32,7 @@ function Post({ setPost, person }){
           setStartTime('');
           setEndTime('');
           setDate('');
+          setPost(false);
         } else {
           setMessage(data.error);
         }

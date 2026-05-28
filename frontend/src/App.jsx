@@ -29,7 +29,7 @@ function App() {
         <div className="content-row">
           <div className="post-column">
             {post ? (
-              <Post post={post} setPost={setPost} userName={loggedInUser} />
+              <Post post={post} setPost={setPost} person={loggedInUser} />
             ) : (
               <button className="create-post-button" onClick={() => setPost(true)}>Create Post</button>
             )}
