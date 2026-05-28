@@ -40,5 +40,28 @@ router.get("/get-post", async (req, res) => {
   }
 });
 
+router.post("/like-post/:postId", async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const { username } = req.body;
+
+    const post = await Post.findById(postId);
+    if (!post) return res.status(404).json({ error: "Post not found" });
+    if (!post.likes) post.likes = [];
+    const alreadyLiked = post.likes.includes(username);
+
+    if (alreadyLiked) {
+      post.likes = post.likes.filter(u => u !== username); // unlike
+    } else {
+      post.likes.push(username); // like
+    }
+
+    await post.save();
+    res.json({ likes: post.likes, likeCount: post.likes.length });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 export default router;

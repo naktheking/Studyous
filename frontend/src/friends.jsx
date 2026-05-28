@@ -212,4 +212,5 @@ function FriendRequest({ loggedInUser })
         )
     
 }
+
 export default FriendRequest;

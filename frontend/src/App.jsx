@@ -3,11 +3,13 @@ import './App.css';
 import Post from './post';
 import Login from './login';
 import FriendRequest from './friends';
+import PostStats from './statistics'
 function App() {
   const [username, setUsername] = useState('');  //only for login/signup form
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loggedInUser, setLoggedInUser] = useState('');  //for when they are already logged in
   const [post, setPost] = useState(false);
+  const [stats, setStats] = useState(false);
 
   return (
     <div className="App">
