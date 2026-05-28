@@ -31,6 +31,12 @@ function App() {
             <Post post={post} setPost={setPost} userName={loggedInUser} />
           </div>
           <FriendRequest loggedInUser={loggedInUser} />
+          <div className="stats-column">
+            <button className="stats-button" onClick={() => setStats(!stats)}>
+              {stats ? 'Hide Post History' : 'View Post History'}
+            </button>
+            <PostStats stats={stats} person={loggedInUser} />
+          </div>
         </div>
       ) : (
         <Login setIsLoggedIn={setIsLoggedIn} setLoggedInUser={setLoggedInUser} setUsername={setUsername} username={username} />
