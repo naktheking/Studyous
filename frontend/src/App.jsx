@@ -28,7 +28,11 @@ function App() {
       {isLoggedIn ? (
         <div className="content-row">
           <div className="post-column">
-            <Post post={post} setPost={setPost} userName={loggedInUser} />
+            {post ? (
+              <Post post={post} setPost={setPost} userName={loggedInUser} />
+            ) : (
+              <button className="create-post-button" onClick={() => setPost(true)}>Create Post</button>
+            )}
           </div>
           <FriendRequest loggedInUser={loggedInUser} />
           <div className="stats-column">
