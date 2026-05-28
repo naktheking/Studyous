@@ -88,8 +88,8 @@ function Post({ setPost, person }){
               onChange={(e) => setEndTime(e.target.value)}
             />
           </div>
-          <button type="button" onClick={() => setPost(false)}>Cancel</button>
           <button type="submit" disabled={!complete}>Submit Post</button>
+          <button type="button" onClick={() => setPost(false)}>Cancel</button>
         </form>
       </div>
   );

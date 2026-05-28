@@ -26,22 +26,25 @@ function App() {
         )}
       </div>
       {isLoggedIn ? (
-        <div className="content-row">
-          <div className="post-column">
-            {post ? (
-              <Post post={post} setPost={setPost} person={loggedInUser} />
-            ) : (
+        <>
+          <div className="content-row">
+            <div className="post-column">
+              {post && <Post post={post} setPost={setPost} person={loggedInUser} />}
+            </div>
+            <FriendRequest loggedInUser={loggedInUser} />
+            <div className="stats-column">
+              <PostStats stats={stats} person={loggedInUser} />
+            </div>
+          </div>
+          <div className="bottom-bar">
+            {!post && (
               <button className="create-post-button" onClick={() => setPost(true)}>Create Post</button>
             )}
-          </div>
-          <FriendRequest loggedInUser={loggedInUser} />
-          <div className="stats-column">
             <button className="stats-button" onClick={() => setStats(!stats)}>
               {stats ? 'Hide Post History' : 'View Post History'}
             </button>
-            <PostStats stats={stats} person={loggedInUser} />
           </div>
-        </div>
+        </>
       ) : (
         <Login setIsLoggedIn={setIsLoggedIn} setLoggedInUser={setLoggedInUser} setUsername={setUsername} username={username} />
       )}

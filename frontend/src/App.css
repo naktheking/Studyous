@@ -239,9 +239,10 @@
   left: 0;
   right: 320px;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   pointer-events: none;
 }
 
