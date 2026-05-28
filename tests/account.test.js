@@ -8,7 +8,7 @@ describe("Login Interface", () => {
         request(app)
             .post("/create-account")
             .send({
-                username: "Michael"
+                username: "Michael",
                 password: "Jackson"
             })
     });
