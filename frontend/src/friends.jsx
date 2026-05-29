@@ -49,6 +49,13 @@ function FriendRequest({ loggedInUser })
 
     const handleSendFriendRequest = async () => {
         try {
+            if (friends.includes(username)) {
+                console.log('User is already a friend.');
+                setUsername('');
+                setSendRequest(false);
+                return;
+            }
+
             const response = await fetch('http://localhost:3000/friend/send-request', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

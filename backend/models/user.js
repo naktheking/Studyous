@@ -1,6 +1,15 @@
 import mongoose from "mongoose";
-import Post from "./post.js";
 
+const PostSchema = new mongoose.Schema(
+  {
+    title: String,
+    location: String,
+    date: String,
+    startTime: String,
+    endTime: String
+  },
+  { timestamps: true }
+);
 
 const UserSchema = new mongoose.Schema(
   {
@@ -8,7 +17,7 @@ const UserSchema = new mongoose.Schema(
     password: String,
     pendingFriendRequests: [String],
     friendList: [String],
-    posts: [Post]
+    posts: [PostSchema]
   }
 );
 
