@@ -1,32 +1,21 @@
 import express from "express";
-import Post from "../models/post.js";
 import User_account from "../models/user.js"
 
 const router = express.Router();
 
-router.get("/get-post/:person", async (req, res) => {
+router.get("/get-posts", async (req, res) => {
   try {
-    const { person } = req.params;
+    const { username } = req.query;
 
-    const posts = await Post.find({
-      person
+    const poster = await User_account.findOne({
+      username
     });
 
-    res.json(posts);
+    res.json(poster);
   } 
   catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
-
-router.get("/get-post", async (req, res) => {
-  try {
-    const post = await Post.find();
-    res.json(post);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
 
 export default router;
