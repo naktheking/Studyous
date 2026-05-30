@@ -1,0 +1,64 @@
+import { useState, useEffect } from 'react';
+
+function PostStats({ stats, setStats, username }) {
+  const [posts, setPosts] = useState('');
+
+  const fetchPosts = async (e) => {
+    e.preventDefault();
+  
+    try {
+      const response = await fetch(`http://localhost:3000/stats/get-posts?username=${username}`, { 
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' }
+    });
+      const userData = await response.json();
+      setPosts(userData.posts);
+      setStats(true);
+
+    } catch (err) {
+        console.error(err);
+    }
+  };
+
+  function getTime(posts) {
+    const startTimes = [];
+    const endTimes = [];
+    let hours = 0;
+    let minutes = 0;
+
+    for (let i = 0; i < posts.length; i++) {
+      startTimes.push(posts[i].startTime);
+      endTimes.push(posts[i].endTime);
+    }
+
+    for (let j = 0; j < startTimes.length; j++) {
+      let startMins = (parseInt(startTimes[j].slice(0, 2)) * 60) + parseInt(startTimes[j].slice(3, 5));
+      let endMins = (parseInt(endTimes[j].slice(0, 2)) * 60) + parseInt(endTimes[j].slice(3, 5));
+
+      minutes += endMins - startMins;
+    }
+
+    hours = Math.floor(minutes / 60);
+    minutes = minutes % 60;
+
+    const out = "Overall time studied: " + hours + " hours, " + minutes + " minutes";
+    return out;
+  }
+
+  return (
+    <div className="post_info">
+    { stats ? ( 
+      <div>
+        <button type="button" onClick={() => setStats(false)}>Hide Post Stats</button>
+        <p>Total posts: {posts.length}</p>
+        <p>hiii</p>
+        <p>{getTime(posts)}</p>
+      </div>
+    ) : (
+      <button className="stats-button" onClick={fetchPosts}>View Post Stats</button>
+    )}
+    </div>
+  )
+
+}
+export default PostStats;

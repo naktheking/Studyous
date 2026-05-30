@@ -31,7 +31,7 @@ function Login({ setIsLoggedIn, setLoggedInUser, setUsername, username }) {
         e.preventDefault();
     
         try {
-            const response = await fetch(`http://localhost:3000/account/get-account?username=${username}`, {
+            const response = await fetch(`http://localhost:3000/account/get-account?username=${username}`,{ 
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         });

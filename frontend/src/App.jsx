@@ -3,12 +3,15 @@ import './App.css';
 import Post from './post';
 import Login from './login';
 import FriendRequest from './friends';
-import PostStats from './statistics'
+import PostHistory from './history'
+import PostStats from './stats'
+
 function App() {
   const [username, setUsername] = useState('');  //only for login/signup form
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loggedInUser, setLoggedInUser] = useState('');  //for when they are already logged in
   const [post, setPost] = useState(false);
+  const [history, setHistory] = useState(false);
   const [stats, setStats] = useState(false);
 
   return (
@@ -32,16 +35,19 @@ function App() {
               {post && <Post post={post} setPost={setPost} person={loggedInUser} />}
             </div>
             <FriendRequest loggedInUser={loggedInUser} />
+            <div className="history-column">
+              <PostHistory history={history} setHistory={setHistory} username={loggedInUser} />
+            </div>
             <div className="stats-column">
-              <PostStats stats={stats} person={loggedInUser} />
+              <PostHistory stats={stats} setStats={setStats} username={loggedInUser} />
             </div>
           </div>
           <div className="bottom-bar">
             {!post && (
               <button className="create-post-button" onClick={() => setPost(true)}>Create Post</button>
             )}
-            <button className="stats-button" onClick={() => setStats(!stats)}>
-              {stats ? 'Hide Post History' : 'View Post History'}
+            <button className="history-button" onClick={() => setHistory(!history)}>
+              {history ? 'Hide Post History' : 'View Post History'}
             </button>
           </div>
         </>
