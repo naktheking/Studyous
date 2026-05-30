@@ -3,12 +3,15 @@ import './App.css';
 import Post from './post';
 import Login from './login';
 import FriendRequest from './friends';
-import PostStats from './statistics'
+import PostHistory from './history'
+import PostStats from './stats'
+
 function App() {
   const [username, setUsername] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loggedInUser, setLoggedInUser] = useState('');
   const [post, setPost] = useState(false);
+  const [history, setHistory] = useState(false);
   const [stats, setStats] = useState(false);
 
   return (
@@ -30,6 +33,7 @@ function App() {
         <>
           <Post post={post} setPost={setPost} person={loggedInUser} />
           <FriendRequest />
+          <PostHistory history={history} setHistory={setHistory} username={loggedInUser} />
           <PostStats stats={stats} setStats={setStats} username={loggedInUser} />
         </>
       ) : (

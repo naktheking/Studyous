@@ -37,7 +37,6 @@ function Login({ setIsLoggedIn, setLoggedInUser, setUsername, username }) {
         });
 
         const data = await response.json();
-        console.log(data);
       
         if (data && data.username === username) {
             setMessage('Login successful!');

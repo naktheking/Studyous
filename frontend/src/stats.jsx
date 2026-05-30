@@ -7,11 +7,10 @@ function PostStats({ stats, setStats, username }) {
     e.preventDefault();
   
     try {
-      const response = await fetch(`http://localhost:3000/statistics/get-posts?username=${username}`, { 
+      const response = await fetch(`http://localhost:3000/stats/get-posts?username=${username}`, { 
       method: 'GET',
       headers: { 'Content-Type': 'application/json' }
     });
-
       const userData = await response.json();
       setPosts(userData.posts);
       setStats(true);
@@ -24,18 +23,10 @@ function PostStats({ stats, setStats, username }) {
     <div className="post_info">
     { stats ? (
       <div>
-        <button type="button" onClick={() => setStats(false)}>Hide Post History</button>
-      {posts.map((post) => (
-      <div key={post._id} className="post">
-        <h4>{post.title}</h4>
-        <p>{post.location}</p>
-        <p>{post.date}</p>
-        <p>{post.startTime} - {post.endTime}</p>
-      </div>
-      ))}
+        <button type="button" onClick={() => setStats(false)}>Hide Post Stats</button>
       </div>
     ) : (
-      <button className="stats-button" onClick={fetchPosts}>View Post History</button>
+      <button className="stats-button" onClick={fetchPosts}>View Post Stats</button>
     )}
     </div>
   )
