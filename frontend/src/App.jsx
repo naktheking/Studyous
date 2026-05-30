@@ -35,19 +35,22 @@ function App() {
               {post && <Post post={post} setPost={setPost} person={loggedInUser} />}
             </div>
             <FriendRequest loggedInUser={loggedInUser} />
-            <div className="history-column">
-              <PostHistory history={history} setHistory={setHistory} username={loggedInUser} />
-            </div>
             <div className="stats-column">
-              <PostHistory stats={stats} setStats={setStats} username={loggedInUser} />
+              <PostStats stats={stats} setStats={setStats} username={loggedInUser} />
+            </div>
+            <div className="history-column">
+              <PostHistory history={history} setHistory={setHistory}  username={loggedInUser} />
             </div>
           </div>
           <div className="bottom-bar">
             {!post && (
               <button className="create-post-button" onClick={() => setPost(true)}>Create Post</button>
             )}
-            <button className="history-button" onClick={() => setHistory(!history)}>
+            <button className="stats-button" onClick={() => setHistory(!history)}>
               {history ? 'Hide Post History' : 'View Post History'}
+            </button>
+            <button className="stats-button" onClick={() => setStats(!stats)}>
+              {stats ? 'Hide Post Stats' : 'View Post Stats'}
             </button>
           </div>
         </>
