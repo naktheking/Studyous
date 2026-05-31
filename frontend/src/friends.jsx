@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
 
-function FriendRequest({ loggedInUser })
+function FriendRequest({ loggedInUser, isOpen, setIsOpen })
 {
     const [username, setUsername] = useState('');
     const [sendRequest, setSendRequest] = useState(false);
     const [incomingRequests, setIncomingRequests] = useState([]);
     const [friends, setFriends] = useState([]);
-    const [isOpen, setIsOpen] = useState(false);
     const [requestMessage, setRequestMessage] = useState('');
 
     useEffect(() => {

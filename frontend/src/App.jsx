@@ -5,6 +5,7 @@ import Login from './login';
 import FriendRequest from './friends';
 import PostHistory from './history'
 import PostStats from './stats'
+import FriendsFeed from './FriendsFeed'
 
 function App() {
   const [username, setUsername] = useState('');  //only for login/signup form
@@ -13,6 +14,7 @@ function App() {
   const [post, setPost] = useState(false);
   const [history, setHistory] = useState(false);
   const [stats, setStats] = useState(false);
+  const [friendPanelOpen, setFriendPanelOpen] = useState(false);
 
   return (
     <div className="App">
@@ -31,10 +33,11 @@ function App() {
       {isLoggedIn ? (
         <>
           <div className="content-row">
-            <div className="post-column">
+            <div className={`post-column${friendPanelOpen ? ' post-column--shifted' : ''}`}>
               {post && <Post post={post} setPost={setPost} person={loggedInUser} />}
+              {!post && <FriendsFeed loggedInUser={loggedInUser} />}
             </div>
-            <FriendRequest loggedInUser={loggedInUser} />
+            <FriendRequest loggedInUser={loggedInUser} isOpen={friendPanelOpen} setIsOpen={setFriendPanelOpen} />
           </div>
           <div className="center-panels">
             <PostStats stats={stats} setStats={setStats} username={loggedInUser} />

@@ -49,6 +49,11 @@
   flex: 1;
   display: flex;
   justify-content: center;
+  transition: margin-right 0.3s ease;
+}
+
+.post-column--shifted {
+  margin-right: 215px;
 }
 
 @media (max-width: 900px) {
@@ -233,6 +238,77 @@
   background-color: var(--accent-bg);
 }
 
+.friends-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 480px;
+  padding: 20px 0;
+}
+
+.feed-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.feed-title {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.refresh-button {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  color: var(--text);
+  font-size: 16px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.refresh-button:hover {
+  background-color: var(--accent-bg);
+}
+
+.friends-feed-empty {
+  padding: 40px 0;
+  color: var(--text);
+  opacity: 0.5;
+  text-align: center;
+}
+
+.feed-post {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.feed-post-author {
+  font-size: 13px;
+  font-weight: 700;
+  color: #007bff;
+  margin-bottom: 4px;
+}
+
+.feed-post-title {
+  margin: 0;
+  font-size: 16px;
+}
+
+.feed-post-detail {
+  margin: 0;
+  font-size: 13px;
+  opacity: 0.75;
+}
+
 .center-panels {
   position: fixed;
   left: 50%;
@@ -256,10 +332,10 @@
   left: 0;
   right: 0;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   pointer-events: none;
 }
 
