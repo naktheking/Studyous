@@ -11,9 +11,16 @@ router.get("/get-posts", async (req, res) => {
       username
     });
 
+    if (!poster) {
+      console.log("User not found");
+      return res.status(404).json({ error: "user not found" });
+    }
+
+    console.log("Posts retrieved successfully");
     res.json(poster);
-  } 
+  }
   catch (err) {
+    console.log(err.message);
     res.status(500).json({ error: err.message });
   }
 });

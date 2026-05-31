@@ -5,12 +5,11 @@ const router = express.Router();
 
 router.post("/create-post", async (req, res) => {
   try {
-    console.log("got post");
     const {person, title, location, date, startTime, endTime } = req.body;
-    
-    console.log("Looking for user:", person);
+
     const user = await User_account.findOne({ username: person });
     if (!user) {
+      console.log("User not found");
       return res.status(404).json({ error: "user not found" });
     }
 
@@ -18,9 +17,11 @@ router.post("/create-post", async (req, res) => {
     await user.save();
 
     const createdPost = user.posts[user.posts.length - 1];
+    console.log("Post created successfully");
     res.json(createdPost);
-    
+
   } catch (err) {
+    console.log(err.message);
     res.status(500).json({ error: err.message });
   }
 });
@@ -31,11 +32,14 @@ router.get("/get-post", async (req, res) => {
     const resolvedUsername = username || person;
     const user = await User_account.findOne({ username: resolvedUsername });
     if (!user) {
+      console.log("User not found");
       return res.status(404).json({ error: "user not found" });
     }
 
+    console.log("Posts retrieved successfully");
     res.json(user.posts);
   } catch (err) {
+    console.log(err.message);
     res.status(500).json({ error: err.message });
   }
 });
@@ -46,20 +50,26 @@ router.post("/like-post/:postId", async (req, res) => {
     const { username } = req.body;
 
     const post = await Post.findById(postId);
-    if (!post) return res.status(404).json({ error: "Post not found" });
+    if (!post) {
+      console.log("Post not found");
+      return res.status(404).json({ error: "Post not found" });
+    }
     if (!post.likes) post.likes = [];
     const alreadyLiked = post.likes.includes(username);
 
     if (alreadyLiked) {
-      post.likes = post.likes.filter(u => u !== username); // unlike
+      post.likes = post.likes.filter(u => u !== username);
+      console.log("Post unliked");
     } else {
-      post.likes.push(username); // like
+      post.likes.push(username);
+      console.log("Post liked");
     }
 
     await post.save();
     res.json({ likes: post.likes, likeCount: post.likes.length });
 
   } catch (err) {
+    console.log(err.message);
     res.status(500).json({ error: err.message });
   }
 });
