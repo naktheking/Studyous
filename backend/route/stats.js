@@ -20,7 +20,6 @@ router.get("/get-posts", async (req, res) => {
     res.json(poster);
   }
   catch (err) {
-    console.log(err.message);
     res.status(500).json({ error: err.message });
   }
 });

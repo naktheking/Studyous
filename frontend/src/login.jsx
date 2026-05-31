@@ -44,9 +44,11 @@ function Login({ setIsLoggedIn, setLoggedInUser, setUsername, username }) {
             setIsLoggedIn(true);
             setUsername('');
             setPassword('');
+            console.log("user logged in");
         } 
         else {
             setMessage('User not found');
+            console.log("User not found");
         }
         } catch (err) {
             setMessage('Error: ' + err.message);

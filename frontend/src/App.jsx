@@ -35,12 +35,10 @@ function App() {
               {post && <Post post={post} setPost={setPost} person={loggedInUser} />}
             </div>
             <FriendRequest loggedInUser={loggedInUser} />
-            <div className="stats-column">
-              <PostStats stats={stats} setStats={setStats} username={loggedInUser} />
-            </div>
-            <div className="history-column">
-              <PostHistory history={history} setHistory={setHistory}  username={loggedInUser} />
-            </div>
+          </div>
+          <div className="center-panels">
+            <PostStats stats={stats} setStats={setStats} username={loggedInUser} />
+            <PostHistory history={history} setHistory={setHistory} username={loggedInUser} />
           </div>
           <div className="bottom-bar">
             {!post && (

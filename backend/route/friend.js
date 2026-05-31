@@ -30,7 +30,6 @@ router.post("/send-request", async (req, res) => {
     console.log("Friend request sent");
     res.json({ success: true, message: "Friend request sent" });
   } catch (err) {
-    console.log(err.message);
     res.status(500).json({ error: err.message });
   }
 });
@@ -47,7 +46,6 @@ router.get("/get-requests/:username", async (req, res) => {
     console.log("Requests retrieved successfully");
     res.json({ success: true, requests: user.pendingFriendRequests });
   } catch (err) {
-    console.log(err.message);
     res.status(500).json({ error: err.message });
   }
 });
@@ -64,7 +62,6 @@ router.get("/get-friends/:username", async (req, res) => {
     console.log("Friends retrieved successfully");
     res.json({ success: true, friends: user.friendList });
   } catch (err) {
-    console.log(err.message);
     res.status(500).json({ error: err.message });
   }
 });
@@ -93,7 +90,6 @@ router.post("/accept-request", async (req, res) => {
     console.log("Friend request accepted");
     res.json({ success: true, message: "Friend request accepted" });
   } catch (err) {
-    console.log(err.message);
     res.status(500).json({ error: err.message });
   }
 });
@@ -117,7 +113,6 @@ router.post("/reject-request", async (req, res) => {
     console.log("Friend request rejected");
     res.json({ success: true, message: "Friend request rejected" });
   } catch (err) {
-    console.log(err.message);
     res.status(500).json({ error: err.message });
   }
 });

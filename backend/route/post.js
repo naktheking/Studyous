@@ -69,7 +69,6 @@ router.post("/like-post/:postId", async (req, res) => {
     res.json({ likes: post.likes, likeCount: post.likes.length });
 
   } catch (err) {
-    console.log(err.message);
     res.status(500).json({ error: err.message });
   }
 });
