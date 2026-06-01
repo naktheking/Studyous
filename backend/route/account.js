@@ -7,17 +7,20 @@ router.post("/create-account", async (req, res) => {
   try {
     const { username, password } = req.body;
     
+    console.log("before findOne");
+    console.log(process.env.MONGO_URI);
     const existingAccount = await User_account.findOne({ username });
+    console.log("after findOne");
 
     if (existingAccount) {
       return res.status(409).json({ error: "account already created" });
     }
     
     const account = await User_account.create({ username, password });
-    res.status(201).json(account);
+    return res.status(201).json(account);
 
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 });
 

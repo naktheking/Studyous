@@ -26,8 +26,4 @@ app.use("/account", accountRouter);
 app.use("/post", postRouter);
 app.use("/friend", friendRouter);
 
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
-});
-
 export default app;
