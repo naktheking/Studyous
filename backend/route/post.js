@@ -36,6 +36,14 @@ router.get("/get-post", async (req, res) => {
       return res.status(404).json({ error: "user not found" });
     }
 
+    // Delete posts with end dates in the past
+    const now = new Date();
+    user.posts = user.posts.filter(post => {
+      const postDateTime = new Date(`${post.date} ${post.endTime}`);
+      return postDateTime > now;
+    });
+    await user.save();
+
     console.log("Posts retrieved successfully");
     res.json(user.posts);
   } catch (err) {
