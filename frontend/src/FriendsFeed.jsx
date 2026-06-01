@@ -9,6 +9,8 @@ function FriendsFeed({ loggedInUser }) {
 
     const fetchFeed = async () => {
       try {
+        setFeedPosts([]);
+        
         const friendsRes = await fetch(`http://localhost:3000/friend/get-friends/${loggedInUser}`);
         const friendsData = await friendsRes.json();
 
