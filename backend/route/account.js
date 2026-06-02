@@ -29,6 +29,24 @@ router.get("/get-account", async (req, res) => {
     const { username } = req.query;
     const user = await User_account.findOne({ username });
     if(user){
+      // Cleanup posts older than 1 week on login
+      const now = new Date();
+      const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+      
+      const initialCount = user.posts.length;
+      user.posts = user.posts.filter(post => {
+        const postDate = new Date(post.date);
+        // Keep posts that haven't ended yet OR are from the current week
+        const postEndTime = new Date(`${post.date} ${post.endTime}`);
+        return postEndTime > now || postDate >= oneWeekAgo;
+      });
+      
+      // Save if posts were deleted
+      if (user.posts.length < initialCount) {
+        await user.save();
+        console.log(`Cleanup on login: Deleted ${initialCount - user.posts.length} old posts for ${username}`);
+      }
+      
       console.log("Account found sucessfully");
       res.json(user);
     } else {
