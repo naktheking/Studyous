@@ -1,5 +1,6 @@
 import express from "express";
 import User_account from "../models/user.js";
+import { createDateFromMilitaryTime } from "../utils/timeUtils.js";
 
 const router = express.Router();
 
@@ -13,6 +14,8 @@ router.post("/create-post", async (req, res) => {
       return res.status(404).json({ error: "user not found" });
     }
 
+    // All times are stored in military time format (24-hour: HH:mm)
+    // e.g., startTime: "14:30" (2:30 PM), endTime: "16:45" (4:45 PM)
     user.posts.push({ title, location, date, startTime, endTime });
     await user.save();
 
@@ -36,16 +39,61 @@ router.get("/get-post", async (req, res) => {
       return res.status(404).json({ error: "user not found" });
     }
 
-    // Delete posts with end dates in the past
+    // Delete posts with end times in the past (all times in military/24-hour format)
     const now = new Date();
     user.posts = user.posts.filter(post => {
-      const postDateTime = new Date(`${post.date} ${post.endTime}`);
+      // Military time format: startTime and endTime are in HH:mm format (e.g., "14:30", "16:45")
+      const postDateTime = createDateFromMilitaryTime(post.date, post.endTime);
       return postDateTime > now;
     });
     await user.save();
 
     console.log("Posts retrieved successfully");
     res.json(user.posts);
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Manual endpoint to clear old posts on user request
+// All times are in military format (HH:mm, 24-hour)
+router.post("/clear-old-posts", async (req, res) => {
+  try {
+    const { username } = req.body;
+
+    if (!username) {
+      return res.status(400).json({ error: "Username required" });
+    }
+
+    const user = await User_account.findOne({ username });
+    if (!user) {
+      console.log("User not found");
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Calculate how many posts will be removed
+    const before = user.posts.length;
+    const now = new Date();
+
+    // Filter posts: keep only those with end times in the future (military time format)
+    user.posts = user.posts.filter(post => {
+      // Times are in military format: HH:mm (e.g., "14:30" means 2:30 PM)
+      const postDateTime = createDateFromMilitaryTime(post.date, post.endTime);
+      return postDateTime > now;
+    });
+
+    await user.save();
+    const after = user.posts.length;
+    const removed = before - after;
+
+    console.log(`Cleared ${removed} old posts for user ${username}`);
+    res.json({
+      success: true,
+      message: `Cleared ${removed} old post(s)`,
+      remainingPosts: after,
+      removedPosts: removed
+    });
   } catch (err) {
     console.log(err.message);
     res.status(500).json({ error: err.message });

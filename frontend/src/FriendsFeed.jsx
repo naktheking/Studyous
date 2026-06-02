@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { convertToTwelveHour } from './utils/timeUtils.js';
 
 const EMOJIS = ['👍', '❤️', '😂', '😮', '🔥', '😢'];
 
@@ -146,7 +147,8 @@ function FriendsFeed({ loggedInUser }) {
               <h4 className="feed-post-title">{post.title}</h4>
               <p className="feed-post-detail">{post.location}</p>
               <p className="feed-post-detail">{post.date}</p>
-              <p className="feed-post-detail">{post.startTime} – {post.endTime}</p>
+              {/* Times stored in military format but displayed in 12-hour format */}
+              <p className="feed-post-detail">{convertToTwelveHour(post.startTime)} – {convertToTwelveHour(post.endTime)}</p>
 
               <div className="reaction-bar">
                 <div className="emoji-buttons">

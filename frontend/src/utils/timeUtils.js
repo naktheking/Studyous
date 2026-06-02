@@ -1,0 +1,21 @@
+/**
+ * Converts military time (24-hour format) to 12-hour format with AM/PM
+ * @param {string} militaryTime - Time in military format (HH:mm, e.g., "14:30")
+ * @returns {string} Time in 12-hour format (e.g., "2:30 PM")
+ */
+export const convertToTwelveHour = (militaryTime) => {
+  if (!militaryTime) return '';
+  
+  const [hours, minutes] = militaryTime.split(':');
+  const hour = parseInt(hours);
+  const min = minutes;
+  
+  const period = hour >= 12 ? 'PM' : 'AM';
+  const displayHour = hour % 12 || 12; // Convert 0 to 12 for midnight, keep others as-is
+  
+  return `${displayHour}:${min} ${period}`;
+};
+
+export default {
+  convertToTwelveHour
+};

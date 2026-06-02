@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { convertToTwelveHour } from './utils/timeUtils.js';
 
 function PostHistory({ history, setHistory, username }) {
   const [posts, setPosts] = useState([]);
@@ -31,7 +32,8 @@ function PostHistory({ history, setHistory, username }) {
         <h4>{post.title}</h4>
         <p>{post.location}</p>
         <p>{post.date}</p>
-        <p>{post.startTime} - {post.endTime}</p>
+        {/* Times stored in military format but displayed in 12-hour format */}
+        <p>{convertToTwelveHour(post.startTime)} - {convertToTwelveHour(post.endTime)}</p>
       </div>
       ))}
       </div>

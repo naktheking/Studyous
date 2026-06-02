@@ -9,6 +9,7 @@ function Post({ setPost, person }){
   const [complete, setComplete] = useState(false);
   const [message, setMessage] = useState('');
 
+  // Times are stored in military/24-hour format but displayed as 12-hour when viewing posts
   const hoursNegative = startTime && endTime && endTime <= startTime;
 
   useEffect(() => {
@@ -22,6 +23,7 @@ function Post({ setPost, person }){
           const response = await fetch('http://localhost:3000/post/create-post', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
+            // Times are sent in military format but will display as 12-hour in feeds
             body: JSON.stringify({ person, title, location, startTime, endTime, date })
         });
 
@@ -80,6 +82,7 @@ function Post({ setPost, person }){
               type="time"
               value={startTime}
               onChange={(e) => setStartTime(e.target.value)}
+              title="Stored in 24-hour format, displayed as 12-hour in feeds"
             />
           </div>
           <div className="form-group">
@@ -88,6 +91,7 @@ function Post({ setPost, person }){
               type="time"
               value={endTime}
               onChange={(e) => setEndTime(e.target.value)}
+              title="Stored in 24-hour format, displayed as 12-hour in feeds"
             />
           </div>
           {hoursNegative && <p style={{ color: 'red', margin: '4px 0' }}>End time must be after start time.</p>}

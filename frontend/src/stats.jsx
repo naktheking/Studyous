@@ -33,6 +33,8 @@ function PostStats({ stats, setStats, username }) {
       endTimes.push(posts[i].endTime);
     }
 
+    // Parse military time format (HH:mm) and calculate total study time
+    // Times are already in 24-hour format (e.g., "14:30" = 2:30 PM)
     for (let j = 0; j < startTimes.length; j++) {
       let startMins = (parseInt(startTimes[j].slice(0, 2)) * 60) + parseInt(startTimes[j].slice(3, 5));
       let endMins = (parseInt(endTimes[j].slice(0, 2)) * 60) + parseInt(endTimes[j].slice(3, 5));
