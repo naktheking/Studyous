@@ -9,9 +9,11 @@ function Post({ setPost, person }){
   const [complete, setComplete] = useState(false);
   const [message, setMessage] = useState('');
 
+  const hoursNegative = startTime && endTime && endTime <= startTime;
+
   useEffect(() => {
-      setComplete(title && location && startTime && endTime && date);
-  }, [title, location, startTime, endTime, date]);
+      setComplete(title && location && startTime && endTime && date && !hoursNegative);
+  }, [title, location, startTime, endTime, date, hoursNegative]);
 
   const handlePost = async (e) => {
       e.preventDefault();
@@ -88,6 +90,7 @@ function Post({ setPost, person }){
               onChange={(e) => setEndTime(e.target.value)}
             />
           </div>
+          {hoursNegative && <p style={{ color: 'red', margin: '4px 0' }}>End time must be after start time.</p>}
           <button type="submit" disabled={!complete}>Submit Post</button>
           <button type="button" onClick={() => setPost(false)}>Cancel</button>
         </form>
