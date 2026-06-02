@@ -35,7 +35,7 @@ function App() {
           <div className="content-row">
             <div className={`post-column${friendPanelOpen ? ' post-column--shifted' : ''}`}>
               {post && <Post post={post} setPost={setPost} person={loggedInUser} />}
-              {!post && <FriendsFeed loggedInUser={loggedInUser} />}
+              {!post && !history && !stats && <FriendsFeed loggedInUser={loggedInUser} />}
             </div>
             <FriendRequest loggedInUser={loggedInUser} isOpen={friendPanelOpen} setIsOpen={setFriendPanelOpen} />
           </div>
@@ -44,13 +44,13 @@ function App() {
             <PostHistory history={history} setHistory={setHistory} username={loggedInUser} />
           </div>
           <div className="bottom-bar">
-            {!post && (
-              <button className="create-post-button" onClick={() => setPost(true)}>Create Post</button>
-            )}
-            <button className="stats-button" onClick={() => setHistory(!history)}>
+            <button className="create-post-button" onClick={() => { setPost(!post); setHistory(false); setStats(false); }}>
+              {post ? 'Hide Create Post' : 'Create Post'}
+            </button>
+            <button className="stats-button" onClick={() => { setHistory(!history); setPost(false); setStats(false); }}>
               {history ? 'Hide Post History' : 'View Post History'}
             </button>
-            <button className="stats-button" onClick={() => setStats(!stats)}>
+            <button className="stats-button" onClick={() => { setStats(!stats); setPost(false); setHistory(false); }}>
               {stats ? 'Hide Post Stats' : 'View Post Stats'}
             </button>
           </div>
