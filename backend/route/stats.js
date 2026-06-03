@@ -18,7 +18,7 @@ router.get("/get-posts", async (req, res) => {
     const posts = await Post.find({ person: username });
 
     console.log("Stats retrieved successfully");
-    res.json({ posts });
+    res.json(poster);
   }
   catch (err) {
     res.status(500).json({ error: err.message });
