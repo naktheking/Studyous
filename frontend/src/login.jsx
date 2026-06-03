@@ -57,8 +57,8 @@ function Login({ setIsLoggedIn, setLoggedInUser, setUsername, username, setProfi
     };
 
     return(
-        <form onSubmit={handleSignup}>
-          <h2>Create Account</h2>
+        <form className="login-form" onSubmit={handleSignup}>
+          <h2>Create Account/Sign in</h2>
           <input
             type="text"
             placeholder="Username"
@@ -71,9 +71,11 @@ function Login({ setIsLoggedIn, setLoggedInUser, setUsername, username, setProfi
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <button type="submit">Sign Up</button>
-          <button type="button" onClick={handleLogin}>Login</button>
-          {message && <p>{message}</p>}
+          <div className="login-actions">
+            <button type="submit" className="login-btn login-btn--primary">Sign Up</button>
+            <button type="button" className="login-btn login-btn--secondary" onClick={handleLogin}>Login</button>
+          </div>
+          {message && <p className="login-message">{message}</p>}
         </form>
     )
 

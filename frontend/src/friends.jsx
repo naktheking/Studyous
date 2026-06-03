@@ -160,7 +160,7 @@ function FriendRequest({ loggedInUser, isOpen, setIsOpen })
                             </button>
 
                             {requestMessage && (
-                                <p style={{ fontSize: '13px', marginTop: '6px', color: requestMessage.includes('already') ? '#dc3545' : '#28a745' }}>
+                                <p style={{ fontSize: '13px', marginTop: '6px', color: requestMessage.includes('sent to') ? '#28a745' : '#dc3545' }}>
                                     {requestMessage}
                                 </p>
                             )}
