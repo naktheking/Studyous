@@ -27,6 +27,7 @@ const UserSchema = new mongoose.Schema(
   {
     username: String,
     password: String,
+    profilePic: { type: String, default: '' },
     pendingFriendRequests: [String],
     friendList: [String],
     posts: [PostSchema]
