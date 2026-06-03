@@ -12,7 +12,6 @@ function PostStats({ stats, setStats, username }) {
       });
         const userData = await response.json();
         setPosts(userData.posts);
-        setStats(true);
       } catch (err) {
           console.error(err);
       }

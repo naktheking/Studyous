@@ -13,7 +13,6 @@ function PostHistory({ history, setHistory, username }) {
       });
         const userData = await response.json();
         setPosts(userData.posts);
-        setHistory(true);
       } catch (err) {
           console.error(err);
       }

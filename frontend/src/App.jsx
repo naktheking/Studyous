@@ -76,12 +76,14 @@ function App() {
             <button className="create-post-button" onClick={() => { setPost(!post); setHistoryOpen(false); setStatsOpen(false); }}>
               {post ? 'Hide Create Post' : 'Create Post'}
             </button>
-            <button className="stats-button" onClick={() => { setHistoryOpen(!historyOpen); setPost(false); setStatsOpen(false); }}>
-              {historyOpen ? 'Hide Post History' : 'View Post History'}
-            </button>
-            <button className="stats-button" onClick={() => { setStatsOpen(!statsOpen); setPost(false); setHistoryOpen(false); }}>
-              {statsOpen ? 'Hide Post Stats' : 'View Post Stats'}
-            </button>
+            <div className="bottom-bar-row">
+              <button className="stats-button" onClick={() => { setHistoryOpen(!historyOpen); setPost(false); setStatsOpen(false); }}>
+                {historyOpen ? 'Hide Post History' : 'View Post History'}
+              </button>
+              <button className="stats-button" onClick={() => { setStatsOpen(!statsOpen); setPost(false); setHistoryOpen(false); }}>
+                {statsOpen ? 'Hide Post Stats' : 'View Post Stats'}
+              </button>
+            </div>
           </div>
         </>
       ) : (
