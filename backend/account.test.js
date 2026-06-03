@@ -1,5 +1,5 @@
 import request from "supertest";
-import app from "./server.js"
+import app from "./app.js"
 
 
 describe("Login Interface", () => {
@@ -22,24 +22,24 @@ describe("Login Interface", () => {
                 username: "Michael"
             })
 
-        expect(resultRem.status).toBe(201); 
+        expect(resultRem.status).toBe(201);  
     });
 
     test("Login successfully", async () => {
         const result = await request(app)
             .post("/account/create-account")
             .send({
-                username: "Michael",
+                username: "Janet",
                 password: "Jackson"
             })
 
         expect(result.status).toBe(201);
-        expect(result.body.username).toBe("Michael");
+        expect(result.body.username).toBe("Janet");
 
         const resultlin = await request(app)
             .get("/account/get-account")
             .send({
-                username: "Michael"
+                username: "Janet"
             })
 
         expect(resultlin.status).toBe(200);
@@ -47,10 +47,10 @@ describe("Login Interface", () => {
          const resultRem = await request(app)
             .post("/account/remove-account")
             .send({
-                username: "Michael"
+                username: "Janet"
             })
 
          expect(resultRem.status).toBe(201);
-    });
+    }); 
 
-});
+}); 
