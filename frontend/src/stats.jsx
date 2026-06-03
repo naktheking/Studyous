@@ -90,6 +90,33 @@ function PostStats({ stats, setStats, username }) {
     return studyDaysThisWeek.size;
   }
 
+  function getLocation(posts) {
+    const locations = new Map();
+    console.log(locations);
+    
+    posts.forEach(post => {
+      console.log(post.location);
+      if (locations.has(post.location)) {
+        locations.set(post.location, locations.get(post.location) + 1);
+      }
+      else {
+        locations.set(post.location, 1);
+      }
+    });
+
+    let out = "--";
+    let max = 0;
+    for (const [location, value] of locations) {
+      console.log(location);
+      if (value > max) {
+        max = value;
+        out = location;
+      }
+    }
+
+    return out;
+  }
+
   return (
     <div className="post_info">
     { stats && ( 
@@ -98,7 +125,7 @@ function PostStats({ stats, setStats, username }) {
           <div className="stat-item">
             <div className="stat-icon">📚</div>
             <div className="stat-content">
-              <p className="stat-label">Study Sessions</p>
+              <p className="stat-label">Total Study Sessions</p>
               <p className="stat-value">{posts.length}</p>
             </div>
           </div>
@@ -108,8 +135,18 @@ function PostStats({ stats, setStats, username }) {
           <div className="stat-item">
             <div className="stat-icon">⏱️</div>
             <div className="stat-content">
-              <p className="stat-label">Total Time Studied</p>
+              <p className="stat-label">Time Studied This Week</p>
               <p className="stat-value">{getTime(posts).replace("Overall time studied: ", "")}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="stats-card">
+          <div className="stat-item">
+            <div className="stat-icon">📍</div>
+            <div className="stat-content">
+              <p className="stat-label">Top Location</p>
+              <p className="stat-value">{getLocation(posts)}</p>
             </div>
           </div>
         </div>
