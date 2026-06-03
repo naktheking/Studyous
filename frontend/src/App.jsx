@@ -12,12 +12,12 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loggedInUser, setLoggedInUser] = useState('');  //for when they are already logged in
   const [post, setPost] = useState(false);
-  const [history, setHistory] = useState(false);
-  const [stats, setStats] = useState(false);
+  const [historyOpen, setHistoryOpen] = useState(false);
+  const [statsOpen, setStatsOpen] = useState(false);
   const [friendPanelOpen, setFriendPanelOpen] = useState(false);
 
   return (
-    <div className="App">
+    <div className="App"> 
       <div className="header">
         <h1>Studyous</h1>
         {isLoggedIn && (
@@ -35,23 +35,23 @@ function App() {
           <div className="content-row">
             <div className={`post-column${friendPanelOpen ? ' post-column--shifted' : ''}`}>
               {post && <Post post={post} setPost={setPost} person={loggedInUser} />}
-              {!post && !history && !stats && <FriendsFeed loggedInUser={loggedInUser} />}
+              {!post && !historyOpen && !statsOpen && <FriendsFeed loggedInUser={loggedInUser} />}
             </div>
             <FriendRequest loggedInUser={loggedInUser} isOpen={friendPanelOpen} setIsOpen={setFriendPanelOpen} />
           </div>
           <div className="center-panels">
-            <PostStats stats={stats} setStats={setStats} username={loggedInUser} />
-            <PostHistory history={history} setHistory={setHistory} username={loggedInUser} />
+            <PostStats stats={statsOpen} setStats={setStatsOpen} username={loggedInUser} />
+            <PostHistory history={historyOpen} setHistory={setHistoryOpen} username={loggedInUser} />
           </div>
           <div className="bottom-bar">
-            <button className="create-post-button" onClick={() => { setPost(!post); setHistory(false); setStats(false); }}>
+            <button className="create-post-button" onClick={() => { setPost(!post); setHistoryOpen(false); setStatsOpen(false); }}>
               {post ? 'Hide Create Post' : 'Create Post'}
             </button>
-            <button className="stats-button" onClick={() => { setHistory(!history); setPost(false); setStats(false); }}>
-              {history ? 'Hide Post History' : 'View Post History'}
+            <button className="stats-button" onClick={() => { setHistoryOpen(!historyOpen); setPost(false); setStatsOpen(false); }}>
+              {historyOpen ? 'Hide Post History' : 'View Post History'}
             </button>
-            <button className="stats-button" onClick={() => { setStats(!stats); setPost(false); setHistory(false); }}>
-              {stats ? 'Hide Post Stats' : 'View Post Stats'}
+            <button className="stats-button" onClick={() => { setStatsOpen(!statsOpen); setPost(false); setHistoryOpen(false); }}>
+              {statsOpen ? 'Hide Post Stats' : 'View Post Stats'}
             </button>
           </div>
         </>
