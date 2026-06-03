@@ -8,6 +8,7 @@ function FriendsFeed({ loggedInUser }) {
   const [refreshKey, setRefreshKey] = useState(0);
   const [commentOpen, setCommentOpen] = useState(new Set());
   const [commentInputs, setCommentInputs] = useState({});
+  const [profilePics, setProfilePics] = useState({});
 
   useEffect(() => {
     if (!loggedInUser) return;
@@ -33,8 +34,18 @@ function FriendsFeed({ loggedInUser }) {
 
         const allPostArrays = await Promise.all(postPromises);
         const allPosts = allPostArrays.flat();
-        allPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
-        setFeedPosts(allPosts);
+allPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
+setFeedPosts(allPosts);
+
+const picPromises = friendsData.friends.map(friend =>
+  fetch(`http://localhost:3000/account/get-account?username=${friend}`)
+    .then(res => res.json())
+    .then(data => ({ [friend]: data.profilePic || '' }))
+    .catch(() => ({ [friend]: '' }))
+);
+const picResults = await Promise.all(picPromises);
+const pics = Object.assign({}, ...picResults);
+setProfilePics(pics);
       } catch (err) {
         console.error('Error fetching feed:', err);
       }
@@ -141,9 +152,16 @@ function FriendsFeed({ loggedInUser }) {
           const myReaction = getMyReaction(reactions);
           const isOpen = commentOpen.has(post._id);
 
-          return (
-            <div key={post._id} className="feed-post">
-              <div className="feed-post-author">{post.author}</div>
+        return (
+          <div key={post._id} className="feed-post">
+            <div className="feed-post-author-row">
+              <img
+                src={profilePics[post.author] || '/default-avatar.png'}
+                alt={post.author}
+                className="profile-pic-small"
+              />
+              <span className="feed-post-author">{post.author}</span>
+            </div>
               <h4 className="feed-post-title">{post.title}</h4>
               <p className="feed-post-detail">{post.location}</p>
               <p className="feed-post-detail">{post.date}</p>

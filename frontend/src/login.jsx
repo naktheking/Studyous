@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-function Login({ setIsLoggedIn, setLoggedInUser, setUsername, username }) {
+function Login({ setIsLoggedIn, setLoggedInUser, setUsername, username, setProfilePic }) {
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
     const handleSignup = async (e) => {
@@ -42,6 +42,7 @@ function Login({ setIsLoggedIn, setLoggedInUser, setUsername, username }) {
             setMessage('Login successful!');
             setLoggedInUser(username);
             setIsLoggedIn(true);
+            setProfilePic(data.profilePic || '');
             setUsername('');
             setPassword('');
             console.log("user logged in");

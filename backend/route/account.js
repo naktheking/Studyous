@@ -1,5 +1,8 @@
 import express from "express";
 import User_account from "../models/user.js";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
 
 const router = express.Router();
 
@@ -54,6 +57,32 @@ router.get("/get-account", async (req, res) => {
       res.json("user not found");
     }
     
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const dir = "uploads/";
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir);
+    cb(null, dir);
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${req.params.username}_${Date.now()}${path.extname(file.originalname)}`);
+  }
+});
+const upload = multer({ storage });
+
+router.post("/upload-pic/:username", upload.single("profilePic"), async (req, res) => {
+  try {
+    const { username } = req.params;
+    const user = await User_account.findOne({ username });
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    user.profilePic = `http://localhost:3000/uploads/${req.file.filename}`;
+    await user.save();
+    res.json({ profilePic: user.profilePic });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
