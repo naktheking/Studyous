@@ -973,3 +973,37 @@
   color: var(--text);
   opacity: 0.8;
 }
+
+.profile-pic-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.profile-pic {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--border);
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.profile-pic:hover {
+  opacity: 0.8;
+}
+
+.feed-post-author-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.profile-pic-small {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--border);
+}
