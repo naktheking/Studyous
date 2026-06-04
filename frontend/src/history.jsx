@@ -23,7 +23,7 @@ function PostHistory({ history, setHistory, username }) {
   }, [username, history]);
 
   return (
-    <div className="post_info">
+    <div className="post_info post_info--scrollable">
     { history && (
       <div>
       {posts.map((post) => (
