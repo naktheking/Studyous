@@ -4,9 +4,9 @@ function PostStats({ stats, setStats, username }) {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    const fetchPosts = async (e) => {
+    const fetchPosts = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/stats/get-posts?username=${username}`, { 
+        const response = await fetch(`http://localhost:3000/history/get-posts?username=${username}`, { 
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
       });
