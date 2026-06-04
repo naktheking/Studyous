@@ -33,6 +33,7 @@ function PostStats({ stats, setStats, username }) {
     const currentDay = now.getDay();
     const daysFromMonday = currentDay === 0 ? 6 : currentDay - 1; // Monday is 0
     const weekStart = new Date(now);
+    console.log(daysFromMonday);
     weekStart.setDate(now.getDate() - daysFromMonday);
     weekStart.setHours(0, 0, 0, 0);
 
@@ -47,7 +48,7 @@ function PostStats({ stats, setStats, username }) {
     for (let j = 0; j < startTimes.length; j++) {
       // Create a date object from the post's date and end time
       const postEndDateTime = new Date(`${dates[j]} ${endTimes[j]}`);
-      const postDate = new Date(dates[j]);
+      const postDate = new Date(dates[j] + "T00:00:00"); // makes it so it is LOCAL time.
       postDate.setHours(0, 0, 0, 0);
       
       // Only count this post if it has already ended AND is from this week
@@ -78,12 +79,13 @@ function PostStats({ stats, setStats, username }) {
     // Get unique days studied this week
     const studyDaysThisWeek = new Set();
     posts.forEach(post => {
-      const postDate = new Date(post.date);
+      const postDate = new Date(post.date + "T00:00:00"); // again makes it so it is LA time.
       postDate.setHours(0, 0, 0, 0);
-      
+     
       if (postDate >= weekStart && postDate <= today) {
         studyDaysThisWeek.add(post.date);
-      }
+        
+      } 
     });
 
     return studyDaysThisWeek.size;
