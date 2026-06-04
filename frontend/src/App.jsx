@@ -15,7 +15,7 @@ function App() {
   const [historyOpen, setHistoryOpen] = useState(false);
   const [statsOpen, setStatsOpen] = useState(false);
   const [friendPanelOpen, setFriendPanelOpen] = useState(false);
-  const [profilePic, setProfilePic] = useState('');
+  const [profilePic, setProfilePic] = useState(''); //string for location of the profile picture
 
   return (
     <div className="App"> 
@@ -39,7 +39,7 @@ function App() {
         onChange={async (e) => {
           const file = e.target.files[0];
           if (!file) return;
-          const formData = new FormData();
+          const formData = new FormData(); //required for file upload
           formData.append('profilePic', file);
           const res = await fetch(`http://localhost:3000/account/upload-pic/${loggedInUser}`, {
             method: 'POST',
@@ -87,6 +87,7 @@ function App() {
           </div>
         </>
       ) : (
+        //if user isn't logged in, show log in page
         <Login setIsLoggedIn={setIsLoggedIn} setLoggedInUser={setLoggedInUser} setUsername={setUsername} username={username} setProfilePic={setProfilePic} />
       )}
     </div>

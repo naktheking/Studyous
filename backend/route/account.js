@@ -1,6 +1,7 @@
 import express from "express";
 import User_account from "../models/user.js";
-import multer from "multer";
+//For profile picture
+import multer from "multer"; 
 import path from "path";
 import fs from "fs";
 
@@ -41,7 +42,7 @@ router.get("/get-account", async (req, res) => {
         const postDate = new Date(post.date);
         // Keep posts that haven't ended yet OR are from the current week
         const postEndTime = new Date(`${post.date} ${post.endTime}`);
-        return postEndTime > now || postDate >= oneWeekAgo;
+        return (postEndTime > now) || (postDate >= oneWeekAgo);
       });
       
       // Save if posts were deleted
@@ -73,8 +74,8 @@ router.post("/login", async (req, res) => {
     }
 
     if (user.password !== password) {
-      console.log("Incorrect password");
-      return res.status(401).json({ error: "Incorrect password" });
+      console.log("Incorrect password or username"); //Don't want hackers to know username is correct
+      return res.status(401).json({ error: "Incorrect password or username" });
     }
 
     console.log("Login successful");
@@ -100,8 +101,9 @@ router.post("/upload-pic/:username", upload.single("profilePic"), async (req, re
   try {
     const { username } = req.params;
     const user = await User_account.findOne({ username });
-    if (!user) return res.status(404).json({ error: "User not found" });
-
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
     user.profilePic = `http://localhost:3000/uploads/${req.file.filename}`;
     await user.save();
     res.json({ profilePic: user.profilePic });

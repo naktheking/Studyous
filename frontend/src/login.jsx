@@ -3,8 +3,10 @@ import { useState } from 'react';
 function Login({ setIsLoggedIn, setLoggedInUser, setUsername, username, setProfilePic }) {
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
+
+    //sign up
     const handleSignup = async (e) => {
-        e.preventDefault();
+        e.preventDefault(); //prevents crashign from reloads
         if(username === "" || password === ""){
             setMessage("Can't have blank Password or Username");
             return;
@@ -31,6 +33,7 @@ function Login({ setIsLoggedIn, setLoggedInUser, setUsername, username, setProfi
         }
     };
 
+    //log in
     const handleLogin = async (e) => {
         e.preventDefault();
     
@@ -76,7 +79,8 @@ function Login({ setIsLoggedIn, setLoggedInUser, setUsername, username, setProfi
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <div className="login-actions">
+          {/*Login button are styled by AI. Refer to Styling Login section in gen_AI_use */}
+          <div className="login-actions"> 
             <button type="submit" className="login-btn login-btn--primary">Sign Up</button>
             <button type="button" className="login-btn login-btn--secondary" onClick={handleLogin}>Login</button>
           </div>

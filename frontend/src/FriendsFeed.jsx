@@ -13,6 +13,7 @@ function FriendsFeed({ loggedInUser }) {
   useEffect(() => {
     if (!loggedInUser) return;
 
+    //Feeds
     const fetchFeed = async () => {
       try {
         setFeedPosts([]);
@@ -20,63 +21,84 @@ function FriendsFeed({ loggedInUser }) {
         const friendsRes = await fetch(`http://localhost:3000/friend/get-friends/${loggedInUser}`);
         const friendsData = await friendsRes.json();
 
+        //no friend or friends have no post
         if (!friendsData.success || friendsData.friends.length === 0) {
           setFeedPosts([]);
           return;
         }
 
-        const postPromises = friendsData.friends.map(friend =>
-          fetch(`http://localhost:3000/post/get-post?username=${friend}`)
-            .then(res => res.json())
-            .then(posts => (Array.isArray(posts) ? posts : []).map(post => ({ ...post, author: friend })))
-            .catch(() => [])
-        );
+        // Fetch one friend's posts and tag each post with its author.
+        // Returns [] if the request fails or the response isn't a post array.
+        const fetchPostsForFriend = async (friend) => {
+          try {
+            const res = await fetch(`http://localhost:3000/post/get-post?username=${friend}`);
+            const posts = await res.json();
 
+            if (!Array.isArray(posts)) return [];
+
+            return posts.map(post => ({ ...post, author: friend })); //...post is each post in the array
+          } catch {
+            return [];
+          }
+        };
+
+        const postPromises = friendsData.friends.map(fetchPostsForFriend);
+
+        //sorts all post in descending order. Newest posts first
         const allPostArrays = await Promise.all(postPromises);
         const allPosts = allPostArrays.flat();
-allPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
-setFeedPosts(allPosts);
+        allPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
+        setFeedPosts(allPosts);
 
-const picPromises = friendsData.friends.map(friend =>
-  fetch(`http://localhost:3000/account/get-account?username=${friend}`)
-    .then(res => res.json())
-    .then(data => ({ [friend]: data.profilePic || '' }))
-    .catch(() => ({ [friend]: '' }))
-);
-const picResults = await Promise.all(picPromises);
-const pics = Object.assign({}, ...picResults);
-setProfilePics(pics);
+        //profile pictures for corresponding posts
+        const picPromises = friendsData.friends.map(friend =>
+          fetch(`http://localhost:3000/account/get-account?username=${friend}`)
+            .then(res => res.json())
+            .then(data => ({ [friend]: data.profilePic || '' })) //If there's no profile pic, then set to default
+            .catch(() => ({ [friend]: '' }))
+        );
+        const picResults = await Promise.all(picPromises);
+        const pics = Object.assign({}, ...picResults);
+        setProfilePics(pics);
       } catch (err) {
         console.error('Error fetching feed:', err);
       }
     };
-
     fetchFeed();
   }, [loggedInUser, refreshKey]);
 
+
+  //Reactions
   const toggleReaction = async (post, emoji) => {
     try {
+      // Tell the backend this user tapped an emoji on this post
       const res = await fetch(`http://localhost:3000/post/react/${post.author}/${post._id}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username: loggedInUser, emoji }),
       });
       const data = await res.json();
-      if (data.reactions !== undefined) {
-        setFeedPosts(prev => prev.map(p =>
-          p._id === post._id && p.author === post.author
-            ? { ...p, reactions: data.reactions }
-            : p
-        ));
-      }
+
+      //No reaction
+      if (data.reactions === undefined) return;
+
+      // Swap in the updated reactions on the post we reacted to, leaving the rest untouched
+      const updatePost = (p) => {
+        const isTargetPost = p._id === post._id && p.author === post.author;
+        return isTargetPost ? { ...p, reactions: data.reactions } : p;
+      };
+      setFeedPosts(prev => prev.map(updatePost));
     } catch (err) {
       console.error('Error reacting:', err);
     }
   };
 
+  //Creating a Comment
   const submitComment = async (post) => {
+    //Comments can't be a blank or whitespace-only
     const text = (commentInputs[post._id] || '').trim();
     if (!text) return;
+
     try {
       const res = await fetch(`http://localhost:3000/post/comment/${post.author}/${post._id}`, {
         method: 'POST',
@@ -84,19 +106,24 @@ setProfilePics(pics);
         body: JSON.stringify({ username: loggedInUser, text }),
       });
       const data = await res.json();
-      if (data.comments !== undefined) {
-        setFeedPosts(prev => prev.map(p =>
-          p._id === post._id && p.author === post.author
-            ? { ...p, comments: data.comments }
-            : p
-        ));
-        setCommentInputs(prev => ({ ...prev, [post._id]: '' }));
-      }
+
+      //No comment
+      if (data.comments === undefined) return;
+
+      const updatePost = (p) => {
+        const isTargetPost = p._id === post._id && p.author === post.author;
+        return isTargetPost ? { ...p, comments: data.comments } : p;
+      };
+      setFeedPosts(prev => prev.map(updatePost));
+
+      // Clear this post's comment input box
+      setCommentInputs(prev => ({ ...prev, [post._id]: '' }));
     } catch (err) {
       console.error('Error commenting:', err);
     }
   };
 
+  //Deleting a comment
   const deleteComment = async (post, commentId) => {
     try {
       const res = await fetch(`http://localhost:3000/post/comment/${post.author}/${post._id}/${commentId}`, {
@@ -105,13 +132,15 @@ setProfilePics(pics);
         body: JSON.stringify({ username: loggedInUser }),
       });
       const data = await res.json();
-      if (data.comments !== undefined) {
-        setFeedPosts(prev => prev.map(p =>
-          p._id === post._id && p.author === post.author
-            ? { ...p, comments: data.comments }
-            : p
-        ));
-      }
+
+      //No comment
+      if (data.comments === undefined) return;
+
+      const updatePost = (p) => {
+        const isTargetPost = p._id === post._id && p.author === post.author; //only allows comment's author to delete comment
+        return isTargetPost ? { ...p, comments: data.comments } : p;
+      };
+      setFeedPosts(prev => prev.map(updatePost));
     } catch (err) {
       console.error('Error deleting comment:', err);
     }
@@ -126,9 +155,13 @@ setProfilePics(pics);
     });
   };
 
+
   const getReactionSummary = (reactions = []) => {
     const counts = {};
-    reactions.forEach(r => { counts[r.emoji] = (counts[r.emoji] || 0) + 1; });
+    reactions.forEach(reaction => {
+      const emoji = reaction.emoji;
+      counts[emoji] = (counts[emoji] || 0) + 1;
+    });
     return counts;
   };
 
@@ -142,9 +175,12 @@ setProfilePics(pics);
         <button className="refresh-button" onClick={() => setRefreshKey(k => k + 1)} title="Refresh feed">↻</button>
       </div>
 
+      {/* If feed is empty */}
       {feedPosts.length === 0 ? (
         <p className="friends-feed-empty">No posts from friends yet.</p>
-      ) : (
+      ) : 
+      //if feed is not empty
+      (
         feedPosts.map(post => {
           const reactions = post.reactions || [];
           const comments = post.comments || [];

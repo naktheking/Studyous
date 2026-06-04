@@ -7,9 +7,7 @@ router.get("/get-posts", async (req, res) => {
   try {
     const { username } = req.query;
 
-    const poster = await User_account.findOne({
-      username
-    });
+    const poster = await User_account.findOne({ username });
 
     if (!poster) {
       console.log("User not found");
