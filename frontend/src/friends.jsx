@@ -160,17 +160,17 @@ function FriendRequest({ loggedInUser, isOpen, setIsOpen })
                             </button>
 
                             {requestMessage && (
-                                <p style={{ fontSize: '13px', marginTop: '6px', color: requestMessage.includes('sent to') ? '#28a745' : '#dc3545' }}>
+                                <p style={{ fontSize: '13px', marginTop: '6px', color: requestMessage.includes('sent to') ? '#28a745' : '#dc3545' }}> 
                                     {requestMessage}
                                 </p>
                             )}
 
                             <div style={{ marginTop: '20px' }}>
-                                <h3 className="incoming-requests-title">Incoming Friend Requests</h3>               //The className was written by AI
+                                <h3 className="incoming-requests-title">Incoming Friend Requests</h3>             
                                 {incomingRequests.length > 0 ? (
                                     <div>
-                                        <div className="incoming-request-item">                                      //the className and styling is written by AI
-                                            <span className="incoming-request-name">{incomingRequests[0]}</span>       //the className and styling is written by AI
+                                        <div className="incoming-request-item">                                      
+                                            <span className="incoming-request-name">{incomingRequests[0]}</span>       
                                             <div className="incoming-request-actions">
                                                 <button 
                                                     onClick={() => handleAcceptRequest(incomingRequests[0])}

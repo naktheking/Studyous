@@ -315,3 +315,68 @@ Improved Spacing and padding for better visual hierarchy
 
 Reflection:
 It's at this point here that the styling has gone too far. I was just having fun with it, but ultimately the changes are not accepted.
+
+
+
+
+----------------------****Styling Login****----------------------
+Prompt: Can you edit the css so that these 2 buttons are further apart and has a better visual than right now? (Context in login/sign up page)
+
+response:
+Done. Here's what I changed:
+
+login.jsx:74-78 — Wrapped the two buttons in a .login-actions row and added classes so they can be spaced and styled independently.
+
+App.css — Added login form styles. The key bit for your request:
+
+The two buttons now live in a flex row with gap: 16px between them, and each uses flex: 1 so they evenly share the width.
+Sign Up is a solid accent (purple) primary button; Login is a softer outlined secondary button — so they're visually distinct rather than two identical grey buttons.
+Both get a subtle lift on hover and press feedback.
+I also gave the surrounding form a card look (centered, padding, rounded border, focus rings on inputs) so the buttons sit in a cohesive container. All colors use your existing theme variables (--accent, --border, etc.), so it adapts to light/dark mode automatically.
+
+If you'd rather the buttons not stretch full-width (e.g. keep them compact and just pushed apart), let me know and I'll swap flex: 1 for justify-content: space-between.
+
+Reflection: 
+The change wrapped the login and submit button in a login-form class and changed the class in css
+The css looked reasonable since it was only changing font, color, background, and border color
+I realized there was a background behind the login form and lite up with hovering which I personally didn't like since it looked like AI slop websites
+
+prompt: can you get rid of the black background and just have 2 buttons of login or sign up. Also avoid the light up when hovering
+
+Response:  Done. I removed:
+
+The card background — .login-form is now background: transparent with no border or box-shadow, so the dark/black panel is gone.
+The hover light-up — removed the transform, box-shadow, and background-change hover rules on both buttons, plus the focus glow on the inputs.
+What remains: the two distinct buttons (solid purple Sign Up, light outlined Login) side by side with a 16px gap, on a clean transparent background.
+
+Reflection: I saw that it removed all background and hover components and didnt' remove anything other than the css files so I agreed with its changes.
+
+prompt: when a user sends a request but the firend isn't foudn, can you change the text of "User not found" to red. Can you also shift the whole friends tab down so it doens't overlap with the logout button
+
+Response: 
+Now let me fix the message color logic — make it green only on success, red otherwise:
+
+Edit friends.jsx
+Modified
+Now let me find the .friend-panel CSS to shift it down:
+Let me check where the logout button sits relative to the friends panel:
+Now I'll shift the friends panel down so it clears the logout button. Both the sticky panel and the fixed request bar need bumping:
+
+Edit App.css
+Modified
+Edit App.css
+Modified
+
+Both changes are done:
+
+1. "User not found" → red — In friends.jsx:163, the color logic was previously green unless the message contained 'already', so "User not found" showed green. I flipped it: the message is now green only when it contains 'sent to' (the success message), and red for everything else — including "User not found", "already your friend", and the failure fallbacks.
+
+2. Friends tab shifted down — Bumped both pieces of the panel down ~60px so they clear the logout button in the header:
+
+App.css:84 — sticky .friend-panel top: 100px → 160px (the ♥ toggle button)
+App.css:94 — fixed .friend_req_bar top: 105px → 165px (the search/request box)
+If 160px isn't quite enough clearance (or it now drops too far), just tell me the offset you want and I'll adjust.
+
+reflection: 
+the css only changed the location of the friend request panel and changed the user not found text to red so there's nothing to worry about.
+I looked over the 3 lines of code and made sure it was fine. 
