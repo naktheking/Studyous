@@ -79,6 +79,9 @@ function Login({ setIsLoggedIn, setLoggedInUser, setUsername, username, setProfi
           <div className="login-actions">
             <button type="submit" className="login-btn login-btn--primary">Sign Up</button>
             <button type="button" className="login-btn login-btn--secondary" onClick={handleLogin}>Login</button>
+            <button type="button" className="login-btn login-btn--secondary" onClick={() => {
+                window.location.href = 'http://localhost:3000/auth/google';
+                }}>Login with Google</button>
           </div>
           {message && <p className="login-message">{message}</p>}
         </form>
