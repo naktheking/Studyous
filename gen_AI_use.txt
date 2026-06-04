@@ -1,4 +1,4 @@
-Prompt: can u make it so that for posts the times are all saved in military time?
+1. Prompt: can u make it so that for posts the times are all saved in military time?
 
 
 Response: I'll help you update the codebase to use military time (24-hour format) for posts and the old post clearing feature. Let me first explore the relevant files to understand the current implementation.
@@ -18,7 +18,7 @@ and tested a bunch of dates after 11:59AM, and then went onto the database to se
 
 
 
-
+2. 
 Prompt: can u just make it stored as military time, but when displaying it in the feed it is still regular time
 
 Response: I'll create a utility function to convert military time to 12-hour format and update the frontend display components to use it.
@@ -36,7 +36,7 @@ I went back onto the website and went on a friended account to see if the post d
 
 
 
-
+3.
 Prompt: can u make all the post related features a solid background color? like white? with 75% opacity?
 
 Response: I'll add white backgrounds with 75% opacity to all post-related elements. Let me update the CSS:
@@ -59,7 +59,7 @@ Reflection:
 I went over the CSS changes it made and it looked relatively correct, but I wasn't sure because we never went over CSS in the class.
 However I went on the website and the words were a little hard to read because the opacity was too low.
 
-
+4.
 Prompt: make it more like 85% opacity
 
 response:
@@ -69,6 +69,7 @@ Reflection: I made sure I turned all the 75's in the CSS file to 85s, and then w
 
 
 ----------------------****Styling Login****----------------------
+5.
 Prompt: Can you edit the css so that these 2 buttons are further apart and has a better visual than right now? (Context in login/sign up page)
 
 response:
@@ -90,6 +91,9 @@ The change wrapped the login and submit button in a login-form class and changed
 The css looked reasonable since it was only changing font, color, background, and border color
 I realized there was a background behind the login form and lite up with hovering which I personally didn't like since it looked like AI slop websites
 
+
+
+6.
 prompt: can you get rid of the black background and just have 2 buttons of login or sign up. Also avoid the light up when hovering
 
 Response:  Done. I removed:
@@ -100,6 +104,8 @@ What remains: the two distinct buttons (solid purple Sign Up, light outlined Log
 
 Reflection: I saw that it removed all background and hover components and didnt' remove anything other than the css files so I agreed with its changes.
 
+
+7.
 prompt: when a user sends a request but the firend isn't foudn, can you change the text of "User not found" to red. Can you also shift the whole friends tab down so it doens't overlap with the logout button
 
 Response: 
