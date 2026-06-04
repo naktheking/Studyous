@@ -1,4 +1,5 @@
 //REMEMBER TO PUT IN AI REPORT
+//OTHER FILES FOR AI REPORT: PACKAGE.JSON, JEST.CONFIG.JS, and JEST.SETUP.JS
 export default {
   testDir: "./e2e",
   webServer: [
