@@ -5,7 +5,11 @@ function Login({ setIsLoggedIn, setLoggedInUser, setUsername, username, setProfi
     const [message, setMessage] = useState('');
     const handleSignup = async (e) => {
         e.preventDefault();
-    
+        if(username === "" || password === ""){
+            setMessage("Can't have blank Password or Username");
+            return;
+        }
+
         try {
         const response = await fetch('http://localhost:3000/account/create-account', {
             method: 'POST',
