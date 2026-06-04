@@ -6,6 +6,9 @@ import accountRouter from "./route/account.js";
 import postRouter from "./route/post.js";
 import friendRouter from "./route/friend.js";
 import historyRouter from "./route/history.js"
+import session from "express-session";
+import passport from "passport";
+import authRouter from "./route/auth.js";
 
 dotenv.config();
 
@@ -19,6 +22,14 @@ app.use(cors({
 
 app.use(express.json());
 
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use("/uploads", express.static("uploads"));
 
 mongoose.connect(process.env.MONGODB_URI)
@@ -29,6 +40,7 @@ app.use("/account", accountRouter);
 app.use("/post", postRouter);
 app.use("/friend", friendRouter);
 app.use("/history", historyRouter);
+app.use("/auth", authRouter);
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);

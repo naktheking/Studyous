@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css';
 import Post from './post';
 import Login from './login';
@@ -16,6 +16,18 @@ function App() {
   const [statsOpen, setStatsOpen] = useState(false);
   const [friendPanelOpen, setFriendPanelOpen] = useState(false);
   const [profilePic, setProfilePic] = useState(''); //string for location of the profile picture
+
+useEffect(() => {
+  const params = new URLSearchParams(window.location.search);
+  const user = params.get('user');
+  const pic = params.get('pic');
+  if (user) {
+    setLoggedInUser(user);
+    setIsLoggedIn(true);
+    if (pic) setProfilePic(decodeURIComponent(pic));
+    window.history.replaceState({}, '', '/');
+  }
+}, []);
 
   return (
     <div className="App"> 

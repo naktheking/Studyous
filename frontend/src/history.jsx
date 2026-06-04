@@ -32,7 +32,7 @@ function PostHistory({ history, setHistory, username }) {
         <p>{post.location}</p>
         <p>{post.date}</p>
         {/* Times stored in military format but displayed in 12-hour format */}
-        <p>{convertToTwelveHour(post.startTime)} - {convertToTwelveHour(post.endTime)}</p>
+        <p>{convertToTwelveHour(post.startTime)} - {convertToTwelveHour(post.endTime)}</p>       {/*This line was written by AI refer to prompt 2.*/}
       </div>
       ))}
       </div>

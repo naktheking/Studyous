@@ -8,6 +8,7 @@ function Post({ setPost, person }){
   const [date, setDate] = useState('');
   const [complete, setComplete] = useState(false);
   const [message, setMessage] = useState('');
+  const [image, setImage] = useState(null);
 
   // Times are stored in military/24-hour format but displayed as 12-hour when viewing posts
   const hoursNegative = startTime && endTime && endTime <= startTime;
@@ -20,11 +21,19 @@ function Post({ setPost, person }){
       e.preventDefault();
 
       try {
+        const formData = new FormData();
+        formData.append('person', person);
+        formData.append('title', title);
+        formData.append('location', location);
+        formData.append('date', date);
+        formData.append('startTime', startTime);
+        formData.append('endTime', endTime);
+        if (image) formData.append('image', image);
           const response = await fetch('http://localhost:3000/post/create-post', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            //headers: { 'Content-Type': 'application/json' },
             // Times are sent in military format but will display as 12-hour in feeds
-            body: JSON.stringify({ person, title, location, startTime, endTime, date })
+            body: formData
         });
 
         const data = await response.json();
@@ -36,6 +45,7 @@ function Post({ setPost, person }){
           setStartTime('');
           setEndTime('');
           setDate('');
+          setImage(null);
           setPost(false);
         } else {
           setMessage(data.error);
@@ -93,6 +103,14 @@ function Post({ setPost, person }){
               onChange={(e) => setEndTime(e.target.value)}
               title="Stored in 24-hour format, displayed as 12-hour in feeds"
             />
+          </div>
+          <div className="form-group">
+            <label>Photo (optional)</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => setImage(e.target.files[0])}
+              />
           </div>
           {hoursNegative && <p style={{ color: 'red', margin: '4px 0' }}>End time must be after start time.</p>}
           <button type="submit" disabled={!complete}>Submit Post</button>
