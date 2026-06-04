@@ -31,14 +31,15 @@ function Login({ setIsLoggedIn, setLoggedInUser, setUsername, username, setProfi
         e.preventDefault();
     
         try {
-            const response = await fetch(`http://localhost:3000/account/get-account?username=${username}`,{ 
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' }
+            const response = await fetch('http://localhost:3000/account/login',{
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
         });
 
         const data = await response.json();
-      
-        if (data && data.username === username) {
+
+        if (response.ok && data && data.username === username) {
             setMessage('Login successful!');
             setLoggedInUser(username);
             setIsLoggedIn(true);
@@ -46,10 +47,10 @@ function Login({ setIsLoggedIn, setLoggedInUser, setUsername, username, setProfi
             setUsername('');
             setPassword('');
             console.log("user logged in");
-        } 
+        }
         else {
-            setMessage('User not found');
-            console.log("User not found");
+            setMessage(data.error || 'Login failed');
+            console.log("Login failed:", data.error);
         }
         } catch (err) {
             setMessage('Error: ' + err.message);

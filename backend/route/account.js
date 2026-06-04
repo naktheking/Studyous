@@ -62,6 +62,28 @@ router.get("/get-account", async (req, res) => {
   }
 });
 
+router.post("/login", async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    const user = await User_account.findOne({ username });
+
+    if (!user) {
+      console.log("Account not found");
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    if (user.password !== password) {
+      console.log("Incorrect password");
+      return res.status(401).json({ error: "Incorrect password" });
+    }
+
+    console.log("Login successful");
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const dir = "uploads/";
