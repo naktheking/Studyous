@@ -62,6 +62,8 @@ router.get("/get-account", async (req, res) => {
   }
 });
 
+
+
 router.post("/login", async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -75,6 +77,30 @@ router.post("/login", async (req, res) => {
     if (user.password !== password) {
       console.log("Incorrect password");
       return res.status(401).json({ error: "Incorrect password" });
+    }
+
+    // Cleanup posts older than 1 week on login
+    const now = new Date();
+    const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    
+    const initialCount = user.posts.length;
+    user.posts = user.posts.filter(post => {
+      // Parse date manually to avoid timezone issues
+      const [year, month, day] = post.date.split('-').map(Number);
+      const postDate = new Date(year, month - 1, day);
+      
+      // Parse time manually (HH:mm format)
+      const [hours, minutes] = post.endTime.split(':').map(Number);
+      const postEndTime = new Date(year, month - 1, day, hours, minutes, 0);
+      
+      // Keep posts that haven't ended yet OR are from the current week
+      return postEndTime > now || postDate >= oneWeekAgo;
+    });
+    
+    // Save if posts were deleted
+    if (user.posts.length < initialCount) {
+      await user.save();
+      console.log(`Cleanup on login: Deleted ${initialCount - user.posts.length} old posts for ${username}`);
     }
 
     console.log("Login successful");
@@ -95,6 +121,8 @@ const storage = multer.diskStorage({
   }
 });
 const upload = multer({ storage });
+
+
 
 router.post("/upload-pic/:username", upload.single("profilePic"), async (req, res) => {
   try {
