@@ -48,40 +48,40 @@ Username is left-adjusted
 Green ✓ button (accept) and red ✕ button (reject) are right-adjusted
 
 <div>
-                                        <div className="incoming-request-item">                                      //the className and styling is written by AI
-                                            <span className="incoming-request-name">{incomingRequests[0]}</span>       //the className and styling is written by AI
-                                            <div className="incoming-request-actions">
-                                                <button 
-                                                    onClick={() => handleAcceptRequest(incomingRequests[0])}
-                                                    style={{
-                                                        backgroundColor: '#28a745',                        //this button styling was wrtting by AI
-                                                        color: 'white',
-                                                        border: 'none',
-                                                        padding: '6px 12px',
-                                                        borderRadius: '4px',
-                                                        cursor: 'pointer',
-                                                        fontSize: '16px'
-                                                    }}
-                                                >
-                                                    ✓
-                                                </button>
-                                                <button 
-                                                    onClick={() => handleRejectRequest(incomingRequests[0])}        //this button was styling wrtitten by AI
-                                                    style={{
-                                                        backgroundColor: '#dc3545',
-                                                        color: 'white',
-                                                        border: 'none',
-                                                        padding: '6px 12px',
-                                                        borderRadius: '4px',
-                                                        cursor: 'pointer',
-                                                        fontSize: '16px'
-                                                    }}
-                                                >
-                                                    ✕
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
+    <div className="incoming-request-item">                                      //the className and styling is written by AI
+        <span className="incoming-request-name">{incomingRequests[0]}</span>       //the className and styling is written by AI
+        <div className="incoming-request-actions">
+            <button 
+                onClick={() => handleAcceptRequest(incomingRequests[0])}
+                style={{
+                    backgroundColor: '#28a745',                        //this button styling was wrtting by AI
+                    color: 'white',
+                    border: 'none',
+                    padding: '6px 12px',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontSize: '16px'
+                }}
+            >
+                ✓
+            </button>
+            <button 
+                onClick={() => handleRejectRequest(incomingRequests[0])}        //this button was styling wrtitten by AI
+                style={{
+                    backgroundColor: '#dc3545',
+                    color: 'white',
+                    border: 'none',
+                    padding: '6px 12px',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontSize: '16px'
+                }}
+            >
+                ✕
+            </button>
+        </div>
+    </div>
+</div>
 
 Reflection: This was really needed because I had no clue how to make text left/right adjusted, or make these buttons. However I did have to make my own
 onClick handle functions for the acceptance and rejection. I just needed them to do the styling. I also made it only display the first element.
@@ -380,3 +380,85 @@ If 160px isn't quite enough clearance (or it now drops too far), just tell me th
 reflection: 
 the css only changed the location of the friend request panel and changed the user not found text to red so there's nothing to worry about.
 I looked over the 3 lines of code and made sure it was fine. 
+
+
+----- EDEN NG - Restyling Buttons & Containers-----
+
+**Prompt 1**
+Prompt: Would it be possible to adjust the "View Post" and "View Stats" so that they line up below the "Create Post" button?
+
+Response: 
+Yes, just change the flex-direction of .bottom-bar to column and wrap the first two buttons in a div:
+  .bottom-bar {
+    position: fixed;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;  /* changed from row */
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    pointer-events: none;
+  }
+  <div className="bottom-bar">
+    <button className="create-post-button" onClick={() => { setPost(!post); setHistoryOpen(false); setStatsOpen(false); }}>
+      {post ? 'Hide Create Post' : 'Create Post'}
+    </button>
+    <div className="bottom-bar-row">
+      <button className="stats-button" onClick={() => { setHistoryOpen(!historyOpen); setPost(false); setStatsOpen(false); }}>
+        {historyOpen ? 'Hide Post History' : 'View Post History'}
+      </button>
+      <button className="stats-button" onClick={() => { setStatsOpen(!statsOpen); setPost(false); setHistoryOpen(false); }}>
+        {statsOpen ? 'Hide Post Stats' : 'View Post Stats'}
+      </button>
+    </div>
+  </div>
+Then add .bottom-bar-row to your CSS:
+  .bottom-bar-row {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+  }
+
+Reflection: This successfully moved the "View Post" and "View Stats" button below the "Create Post" button, then aligned them together
+in the same row, side-by-side as intended.
+
+**Prompt 2**
+Prompt: How would I make the contents of post_stats two rows of 2 instead of a column of 4?
+
+Response: 
+Add a grid to your .stats-container:
+  .stats-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+That'll automatically flow your 4 cards into a 2x2 grid. The progress bar (weekly streak) will span both columns if you want it to stay full width:
+  .stats-progress {
+    grid-column: span 2;
+  }
+
+Reflection: This prompt adjusted the layout of the post statistics from previous being a column of 4 cards to two rows of 2 cards each for easier
+readability. After this, I manually changed the size and positioning of the grid by adding padding and margins such that the cards 
+properly filled up the screen.
+
+**Prompt 3**
+Prompt: How do I make the post history list (.post_info) scroll rather than extend down the page?
+
+Response:
+Add overflow-y: auto and a max-height to .post_info:
+  .post_info {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    max-width: 800px;
+    padding: 20px;
+    max-height: calc(100vh - 200px); /* leaves room for header and bottom bar */
+    overflow-y: auto;
+  }
+
+Reflection: Previously, the post history extended down the page, where it was cut off at the bottom. This prompt successfully converted
+the display into a scrolling list that can extend as more posts are added. I then manually set a height limit to the div so that it 
+no longer overlapped with the bottom buttons.
