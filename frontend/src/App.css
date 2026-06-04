@@ -34,7 +34,7 @@
   justify-content: flex-end;
   gap: 20px;
   flex-grow: 1;
-  padding-bottom: 20px;
+  padding-bottom: 120px;
 }
 
 .content-row {
@@ -1107,4 +1107,12 @@
   border-radius: 50%;
   object-fit: cover;
   border: 1px solid var(--border);
+}
+
+.post-image {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-top: 8px;
 }

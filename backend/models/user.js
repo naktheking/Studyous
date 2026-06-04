@@ -17,6 +17,7 @@ const PostSchema = new mongoose.Schema(
     date: String,
     startTime: String,
     endTime: String,
+    image: { type: String, default: '' },
     reactions: { type: [ReactionSchema], default: [] },
     comments:  { type: [CommentSchema],  default: [] },
   },
@@ -27,6 +28,7 @@ const UserSchema = new mongoose.Schema(
   {
     username: String,
     password: String,
+    googleId: String,
     profilePic: { type: String, default: '' },
     pendingFriendRequests: [String],
     friendList: [String],

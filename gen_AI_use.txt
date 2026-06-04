@@ -1,7 +1,98 @@
-Prompt: can u make it so that for posts the times are all saved in military time?
+___________________________________________________Larry Zhou__________________________________________________
+
+Prompt 1: can u edit the CSS so that the post button is at the bottom of the screen and the friend username search 
+bar is on the right side. make it like 40 pixels wide.
+
+Response: Done! I've made the CSS updates:
+
+Post button at the bottom: Changed .logged-in-container to use justify-content: flex-end so the post form moves to the bottom of the 
+screen
+Friend search bar on the right: Changed .friend_req_bar to position fixed on the right side (40px from the edge) with horizontal layout, 
+and set the input width to 40px
+The friend username search input is now a compact 40px-wide field positioned on the right side, and the post form will appear 
+at the bottom of the screen.
+
+Reflection: This was definately a change that I could have done myself because the postitioning of objects in the CSS file doesn't seem
+too hard, but it is pretty convenient that I can ask AI to format things for me.
 
 
-Response: I'll help you update the codebase to use military time (24-hour format) for posts and the old post clearing feature. Let me first explore the relevant files to understand the current implementation.
+
+prompt 2: Can u make the button to hide or show the friends UI a heart?:
+
+Response: Done! Added the heart button styline in App.css 13-210:
+
+Reflection:
+This was a pretty unecessary use of AI because the button didn't have to be a heart. I just thought it looked cool so I kept it.
+
+
+
+Prompt 3: Is it possible for you to make the display of friends list a scrollable Bar? make it 300 pxls long and the same width as all
+other friends features. I will need it later to display the list of friends.
+
+Response: Added a scrollable bar with className friendList in App.css
+
+Reflection:
+Again this wasn't a super necessary CSS addition. I just thought it could look cool, and I kept the CSS change. I basically used it by using 
+map function in Javascript to map all the list items into the display chunk.
+
+
+
+Prompt 4: okay now for every list item make it left adjusted without the bullet point. then have two buttons right adjusted. one is a green check mark for accept, 
+one is a red check mark for reject
+
+Response: 
+Done! I've updated both frontend and backend:
+
+Removed bullet points and replaced <ul><li> with flexbox layout
+Username is left-adjusted
+Green ✓ button (accept) and red ✕ button (reject) are right-adjusted
+
+<div>
+    <div className="incoming-request-item">                                      //the className and styling is written by AI
+        <span className="incoming-request-name">{incomingRequests[0]}</span>       //the className and styling is written by AI
+        <div className="incoming-request-actions">
+            <button 
+                onClick={() => handleAcceptRequest(incomingRequests[0])}
+                style={{
+                    backgroundColor: '#28a745',                        //this button styling was wrtting by AI
+                    color: 'white',
+                    border: 'none',
+                    padding: '6px 12px',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontSize: '16px'
+                }}
+            >
+                ✓
+            </button>
+            <button 
+                onClick={() => handleRejectRequest(incomingRequests[0])}        //this button was styling wrtitten by AI
+                style={{
+                    backgroundColor: '#dc3545',
+                    color: 'white',
+                    border: 'none',
+                    padding: '6px 12px',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontSize: '16px'
+                }}
+            >
+                ✕
+            </button>
+        </div>
+    </div>
+</div>
+
+Reflection: This was really needed because I had no clue how to make text left/right adjusted, or make these buttons. However I did have to make my own
+onClick handle functions for the acceptance and rejection. I just needed them to do the styling. I also made it only display the first element.
+
+
+
+Prompt 5: can u make it so that for posts the times are all saved in military time?
+
+
+Response: I'll help you update the codebase to use military time (24-hour format) for posts and the old post clearing
+feature. Let me first explore the relevant files to understand the current implementation.
 
 First, I'll create a utility function for military time formatting on the backend
 (generates timeUtils.js and calls the functions in post.js)
@@ -15,29 +106,126 @@ Added clarifying comments (e.g., "14:30" = 2:30 PM)
 Reflection: I used AI here because I thought to get the current time there was some special library I had to import.
 It turns out there wasn't so I just went in and looked at the logic of the timeUtils.js file. Then I went onto the website 
 and tested a bunch of dates after 11:59AM, and then went onto the database to see if it stored correctly. It did.
+//This file was generated by AI. refer to prompt 1 in the get_AI.txt for more details.
+
+/**
+ * Utility functions for handling military time (24-hour format)
+ * All times should be stored and processed in military time format (HH:mm)
+ */
+
+/**
+ * Converts a time string to military format (24-hour HH:mm format)
+ * @param {string} timeStr - Time string in any common format
+ * @returns {string} Time in military format (HH:mm)
+ */
+export const toMilitaryTime = (timeStr) => {
+  if (!timeStr) return '';
+  // If already in military format (HH:mm), return as-is
+  if (/^\d{2}:\d{2}$/.test(timeStr)) {
+    return timeStr;
+  }
+  // Add more format conversions as needed
+  return timeStr;
+};
+
+/**
+ * Validates if a time string is in military format
+ * @param {string} timeStr - Time string to validate
+ * @returns {boolean} True if in military format (HH:mm)
+ */
+export const isMilitaryTime = (timeStr) => {
+  return /^([0-1][0-9]|2[0-3]):[0-5][0-9]$/.test(timeStr);
+};
+
+/**
+ * Creates a Date object from date and military time strings
+ * @param {string} dateStr - Date in YYYY-MM-DD format
+ * @param {string} militaryTimeStr - Time in military format HH:mm
+ * @returns {Date} Combined date and time
+ */
+export const createDateFromMilitaryTime = (dateStr, militaryTimeStr) => {
+  return new Date(`${dateStr} ${militaryTimeStr}`);
+};
+
+/**
+ * Validates end time is after start time (both in military format)
+ * @param {string} startTime - Start time in military format (HH:mm)
+ * @param {string} endTime - End time in military format (HH:mm)
+ * @returns {boolean} True if endTime is after startTime
+ */
+export const isValidTimeRange = (startTime, endTime) => {
+  return endTime > startTime;
+};
+
+export default {
+  toMilitaryTime,
+  isMilitaryTime,
+  createDateFromMilitaryTime,
+  isValidTimeRange
+};
+
+
+Updated post.js:       const postDateTime = createDateFromMilitaryTime(post.date, post.endTime);  //This line was written by AI.
+
+Added military time utility imports
+Added clarifying comments (e.g., "14:30" = 2:30 PM)
+
+
+Reflection: I used AI here because I thought to get the current time there was some special library I had to import.
+It turns out there wasn't so I just went in and looked at the logic of the timeUtils.js file. 
+Then I went onto the website and tested a bunch of dates after 11:59AM, and then went onto the database to see if it 
+stored correctly. It did.
 
 
 
 
-Prompt: can u just make it stored as military time, but when displaying it in the feed it is still regular time
+Prompt 6: can u just make it stored as military time, but when displaying it in the feed it is still regular time
 
-Response: I'll create a utility function to convert military time to 12-hour format and update the frontend display components to use it.
+Response: I'll create a utility function to convert military time to 12-hour format and update the frontend display components 
+to use it.
 
 Done! Now times are stored in military format (24-hour) but displayed in regular 12-hour format (with AM/PM) in the feeds.
 
 Created timeUtils.js - Conversion function to display military time as 12-hour format (e.g., "14:30" → "2:30 PM")
+//This file was generated by AI. refer to prompt 2 in the get_AI.txt for more details.
+
+/**
+ * Converts military time (24-hour format) to 12-hour format with AM/PM
+ * @param {string} militaryTime - Time in military format (HH:mm, e.g., "14:30")
+ * @returns {string} Time in 12-hour format (e.g., "2:30 PM")
+ */
+export const convertToTwelveHour = (militaryTime) => {
+  if (!militaryTime) return '';
+  
+  const [hours, minutes] = militaryTime.split(':');
+  const hour = parseInt(hours);
+  const min = minutes;
+  
+  const period = hour >= 12 ? 'PM' : 'AM';
+  const displayHour = hour % 12 || 12; // Convert 0 to 12 for midnight, keep others as-is
+  
+  return `${displayHour}:${min} ${period}`;
+};
+
+export default {
+  convertToTwelveHour
+};
+
+
+
 Updated FriendsFeed.jsx - Uses convertToTwelveHour() to display times as 12-hour
 Updated history.jsx - Uses convertToTwelveHour() for 12-hour display
 Updated statistics.jsx - Uses convertToTwelveHour() for 12-hour display
 
 Reflection: I looked at the code and compared it to the backend timeUtils.js. The on in the frontend reversed it back from 
 military time correctly. I thought I was going to have to actually imcorporate the functions into my other jsx files but it did them for me.
-I went back onto the website and went on a friended account to see if the post display was correct. It was.
+I went back onto the website and went on a friended account to see if the post display was correct. It was. 
+I did not end up adopting the changes in statstics.jsx
 
 
 
 
-Prompt: can u make all the post related features a solid background color? like white? with 75% opacity?
+Prompt 7: can u make all the post related features a solid background color? like white? with 75% opacity?
 
 Response: I'll add white backgrounds with 75% opacity to all post-related elements. Let me update the CSS:
 
@@ -60,7 +248,9 @@ I went over the CSS changes it made and it looked relatively correct, but I wasn
 However I went on the website and the words were a little hard to read because the opacity was too low.
 
 
-Prompt: make it more like 85% opacity
+
+
+Prompt 8: make it more like 85% opacity
 
 response:
 Done! Updated all post-related elements to 85% opacity for better visibility of the background image.
@@ -68,3 +258,214 @@ Done! Updated all post-related elements to 85% opacity for better visibility of 
 Reflection: I made sure I turned all the 75's in the CSS file to 85s, and then went onto the website to check again. The opacity was the way I liked it to be.
 
 
+can u just make the usernames on the post bigger
+
+prompt 5: can u just make the usernames on the post bigger?
+
+Response: Done! Increased the username font size from 12px to 16px.
+
+Reflection: I was satisfied with the new font size for the username on the post section. 
+
+
+
+Prompt 9: the study stats log seems a bit bland. can u try and embelish it a bit?
+
+Response: Done! I've embellished the stats display with several improvements:
+
+Enhanced Features:
+
+Card-based design with gradient backgrounds and border accents
+Icon emojis (📚 for sessions, ⏱️ for study time) for visual interest
+Better typography with clear labels and large, bold numbers
+Visual progress bar showing study streak
+Hover effects - cards lift up and glow on hover
+Improved spacing with better padding and gaps
+Color accents using the app's accent color scheme
+The stats now have a modern, polished look that matches the overall design aesthetic. The cards are interactive with smooth transitions, 
+and the information is presented in a much more engaging way!
+
+Relection: To be honest, I definately could have been more specific with the prompt. However I didn't even know what I was looking to make, since
+my creativity in design is lacking. 
+
+
+prompt 10: Can u add that purple border for the post UI and post history UI as well?
+Done! I've added the purple border accent to all post-related UI elements:
+
+The changes are all made in App.css and Index.css
+Updated Elements:
+
+.post-form - Create post form
+.feed-post - Posts in the friends feed
+.post - Posts in history/stats views
+All now have the 2px solid rgba(170, 59, 255, 0.3) purple border that matches the stats cards for a cohesive design.
+
+Reflection: At this point because I don't know CSS I have just gone wild with AI and CSS. I really liked the purple border since its my favorite color.
+I kept this change.
+
+
+prompt 11: can u embelish the fonts for these too? And try some creative styling on the buttons and input bars
+
+Done! I've significantly embellished the styling with:
+
+Major Enhancements:
+
+Dramatic Multi-Stop Gradients on all cards with subtle color shifts
+Layered Shadows creating depth and visual hierarchy
+Shimmer Effect on hover that slides across elements
+Enhanced Typography: Bolder fonts (800-900 weight), text shadows, gradient text effect on titles
+Gradient Buttons with shimmer animations and better shadows
+Better Input Fields with gradient backgrounds and enhanced focus states
+Inset Highlights that give cards more dimension
+Bigger Hover Transforms - cards lift further on interaction
+Better Visual Depth with multiple shadow layers and stronger purple accents
+Improved Spacing and padding for better visual hierarchy
+
+Reflection:
+It's at this point here that the styling has gone too far. I was just having fun with it, but ultimately the changes are not accepted.
+
+
+
+
+----------------------****Styling Login****----------------------
+Prompt: Can you edit the css so that these 2 buttons are further apart and has a better visual than right now? (Context in login/sign up page)
+
+response:
+Done. Here's what I changed:
+
+login.jsx:74-78 — Wrapped the two buttons in a .login-actions row and added classes so they can be spaced and styled independently.
+
+App.css — Added login form styles. The key bit for your request:
+
+The two buttons now live in a flex row with gap: 16px between them, and each uses flex: 1 so they evenly share the width.
+Sign Up is a solid accent (purple) primary button; Login is a softer outlined secondary button — so they're visually distinct rather than two identical grey buttons.
+Both get a subtle lift on hover and press feedback.
+I also gave the surrounding form a card look (centered, padding, rounded border, focus rings on inputs) so the buttons sit in a cohesive container. All colors use your existing theme variables (--accent, --border, etc.), so it adapts to light/dark mode automatically.
+
+If you'd rather the buttons not stretch full-width (e.g. keep them compact and just pushed apart), let me know and I'll swap flex: 1 for justify-content: space-between.
+
+Reflection: 
+The change wrapped the login and submit button in a login-form class and changed the class in css
+The css looked reasonable since it was only changing font, color, background, and border color
+I realized there was a background behind the login form and lite up with hovering which I personally didn't like since it looked like AI slop websites
+
+prompt: can you get rid of the black background and just have 2 buttons of login or sign up. Also avoid the light up when hovering
+
+Response:  Done. I removed:
+
+The card background — .login-form is now background: transparent with no border or box-shadow, so the dark/black panel is gone.
+The hover light-up — removed the transform, box-shadow, and background-change hover rules on both buttons, plus the focus glow on the inputs.
+What remains: the two distinct buttons (solid purple Sign Up, light outlined Login) side by side with a 16px gap, on a clean transparent background.
+
+Reflection: I saw that it removed all background and hover components and didnt' remove anything other than the css files so I agreed with its changes.
+
+prompt: when a user sends a request but the firend isn't foudn, can you change the text of "User not found" to red. Can you also shift the whole friends tab down so it doens't overlap with the logout button
+
+Response: 
+Now let me fix the message color logic — make it green only on success, red otherwise:
+
+Edit friends.jsx
+Modified
+Now let me find the .friend-panel CSS to shift it down:
+Let me check where the logout button sits relative to the friends panel:
+Now I'll shift the friends panel down so it clears the logout button. Both the sticky panel and the fixed request bar need bumping:
+
+Edit App.css
+Modified
+Edit App.css
+Modified
+
+Both changes are done:
+
+1. "User not found" → red — In friends.jsx:163, the color logic was previously green unless the message contained 'already', so "User not found" showed green. I flipped it: the message is now green only when it contains 'sent to' (the success message), and red for everything else — including "User not found", "already your friend", and the failure fallbacks.
+
+2. Friends tab shifted down — Bumped both pieces of the panel down ~60px so they clear the logout button in the header:
+
+App.css:84 — sticky .friend-panel top: 100px → 160px (the ♥ toggle button)
+App.css:94 — fixed .friend_req_bar top: 105px → 165px (the search/request box)
+If 160px isn't quite enough clearance (or it now drops too far), just tell me the offset you want and I'll adjust.
+
+reflection: 
+the css only changed the location of the friend request panel and changed the user not found text to red so there's nothing to worry about.
+I looked over the 3 lines of code and made sure it was fine. 
+
+
+----- EDEN NG - Restyling Buttons & Containers-----
+
+**Prompt 1**
+Prompt: Would it be possible to adjust the "View Post" and "View Stats" so that they line up below the "Create Post" button?
+
+Response: 
+Yes, just change the flex-direction of .bottom-bar to column and wrap the first two buttons in a div:
+  .bottom-bar {
+    position: fixed;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;  /* changed from row */
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    pointer-events: none;
+  }
+  <div className="bottom-bar">
+    <button className="create-post-button" onClick={() => { setPost(!post); setHistoryOpen(false); setStatsOpen(false); }}>
+      {post ? 'Hide Create Post' : 'Create Post'}
+    </button>
+    <div className="bottom-bar-row">
+      <button className="stats-button" onClick={() => { setHistoryOpen(!historyOpen); setPost(false); setStatsOpen(false); }}>
+        {historyOpen ? 'Hide Post History' : 'View Post History'}
+      </button>
+      <button className="stats-button" onClick={() => { setStatsOpen(!statsOpen); setPost(false); setHistoryOpen(false); }}>
+        {statsOpen ? 'Hide Post Stats' : 'View Post Stats'}
+      </button>
+    </div>
+  </div>
+Then add .bottom-bar-row to your CSS:
+  .bottom-bar-row {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+  }
+
+Reflection: This successfully moved the "View Post" and "View Stats" button below the "Create Post" button, then aligned them together
+in the same row, side-by-side as intended.
+
+**Prompt 2**
+Prompt: How would I make the contents of post_stats two rows of 2 instead of a column of 4?
+
+Response: 
+Add a grid to your .stats-container:
+  .stats-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+That'll automatically flow your 4 cards into a 2x2 grid. The progress bar (weekly streak) will span both columns if you want it to stay full width:
+  .stats-progress {
+    grid-column: span 2;
+  }
+
+Reflection: This prompt adjusted the layout of the post statistics from previous being a column of 4 cards to two rows of 2 cards each for easier
+readability. After this, I manually changed the size and positioning of the grid by adding padding and margins such that the cards 
+properly filled up the screen.
+
+**Prompt 3**
+Prompt: How do I make the post history list (.post_info) scroll rather than extend down the page?
+
+Response:
+Add overflow-y: auto and a max-height to .post_info:
+  .post_info {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    max-width: 800px;
+    padding: 20px;
+    max-height: calc(100vh - 200px); /* leaves room for header and bottom bar */
+    overflow-y: auto;
+  }
+
+Reflection: Previously, the post history extended down the page, where it was cut off at the bottom. This prompt successfully converted
+the display into a scrolling list that can extend as more posts are added. I then manually set a height limit to the div so that it 
+no longer overlapped with the bottom buttons.

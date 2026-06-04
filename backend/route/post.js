@@ -1,10 +1,25 @@
 import express from "express";
 import User_account from "../models/user.js";
 import { createDateFromMilitaryTime } from "../utils/timeUtils.js";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const dir = "uploads/";
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir);
+    cb(null, dir);
+  },
+  filename: (req, file, cb) => {
+    cb(null, `post_${Date.now()}${path.extname(file.originalname)}`);
+  }
+});
+const upload = multer({ storage });
 
 const router = express.Router();
 
-router.post("/create-post", async (req, res) => {
+router.post("/create-post", upload.single("image"), async (req, res) => {
   try {
     const {person, title, location, date, startTime, endTime } = req.body;
 
@@ -16,7 +31,8 @@ router.post("/create-post", async (req, res) => {
 
     // All times are stored in military time format (24-hour: HH:mm)
     // e.g., startTime: "14:30" (2:30 PM), endTime: "16:45" (4:45 PM)
-    user.posts.push({ title, location, date, startTime, endTime });
+    const imageUrl = req.file ? `http://localhost:3000/uploads/${req.file.filename}` : '';
+    user.posts.push({ title, location, date, startTime, endTime, image: imageUrl });
     await user.save();
 
     const createdPost = user.posts[user.posts.length - 1];
@@ -47,54 +63,63 @@ router.get("/get-post", async (req, res) => {
   }
 });
 
-// Cleanup endpoint called on login - deletes posts older than 1 week
-// Only deletes posts where the end time has passed AND the post date is older than 7 days
-router.post("/cleanup-old-posts", async (req, res) => {
+
+
+
+
+router.post("/like-post/:postId", async (req, res) => {
   try {
-    const { username } = req.body;
+    const { ownerUsername, postId } = req.params;
+    const { username, text } = req.body;
 
-    if (!username) {
-      return res.status(400).json({ error: "Username required" });
-    }
+    if (!text || !text.trim()) return res.status(400).json({ error: "Comment text required" });
 
-    const user = await User_account.findOne({ username });
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
+    const user = await User_account.findOne({ username: ownerUsername });
+    if (!user) return res.status(404).json({ error: "User not found" });
 
-    const before = user.posts.length;
-    const now = new Date();
-    const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    const post = user.posts.id(postId);
+    if (!post) return res.status(404).json({ error: "Post not found" });
 
-    // Delete posts that are older than 1 week AND have already ended
-    user.posts = user.posts.filter(post => {
-      const postDate = new Date(post.date);
-      const postDateTime = createDateFromMilitaryTime(post.date, post.endTime);
-      
-      // Keep the post if:
-      // - It hasn't ended yet, OR
-      // - It ended but is from the current week
-      return postDateTime > now || postDate >= oneWeekAgo;
-    });
-
+    post.comments.push({ username, text: text.trim() });
     await user.save();
-    const after = user.posts.length;
-    const removed = before - after;
-
-    if (removed > 0) {
-      console.log(`Cleanup: Deleted ${removed} posts older than 1 week for user ${username}`);
-    }
-
-    res.json({
-      success: true,
-      removedPosts: removed
-    });
+    res.json({ comments: post.comments });
   } catch (err) {
-    console.log(err.message);
     res.status(500).json({ error: err.message });
   }
 });
 
+// Delete a comment (only the comment's author can delete it)
+router.delete("/comment/:ownerUsername/:postId/:commentId", async (req, res) => {
+  try {
+    const { ownerUsername, postId, commentId } = req.params;
+    const { username } = req.body;
+
+    const post = await Post.findById(postId);
+    if (!post) {
+      console.log("Post not found");
+      return res.status(404).json({ error: "Post not found" });
+    }
+    if (!post.likes) post.likes = [];
+    const alreadyLiked = post.likes.includes(username);
+
+    if (alreadyLiked) {
+      post.likes = post.likes.filter(u => u !== username);
+      console.log("Post unliked");
+    } else {
+      post.likes.push(username);
+      console.log("Post liked");
+    }
+
+    await post.save();
+    res.json({ likes: post.likes, likeCount: post.likes.length });
+
+    post.comments.pull(commentId);
+    await user.save();
+    res.json({ comments: post.comments });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 // Toggle an emoji reaction on a post (one reaction per user; same emoji removes it)
 router.post("/react/:ownerUsername/:postId", async (req, res) => {
