@@ -129,7 +129,7 @@ router.post("/cleanup-old-posts", async (req, res) => {
     // Delete posts that are older than 1 week AND have already ended
     user.posts = user.posts.filter(post => {
       const postDate = new Date(post.date);
-      const postDateTime = createDateFromMilitaryTime(post.date, post.endTime);
+      const postDateTime = createDateFromMilitaryTime(post.date, post.endTime);  //This line was written by AI. Refer to prompt 1 in the gen_aI_use.txt file
       
       // Keep the post if:
       // - It hasn't ended yet, OR

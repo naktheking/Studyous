@@ -160,22 +160,22 @@ function FriendRequest({ loggedInUser, isOpen, setIsOpen })
                             </button>
 
                             {requestMessage && (
-                                <p style={{ fontSize: '13px', marginTop: '6px', color: requestMessage.includes('sent to') ? '#28a745' : '#dc3545' }}>
+                                <p style={{ fontSize: '13px', marginTop: '6px', color: requestMessage.includes('sent to') ? '#28a745' : '#dc3545' }}> 
                                     {requestMessage}
                                 </p>
                             )}
 
                             <div style={{ marginTop: '20px' }}>
-                                <h3 className="incoming-requests-title">Incoming Friend Requests</h3>
+                                <h3 className="incoming-requests-title">Incoming Friend Requests</h3>             
                                 {incomingRequests.length > 0 ? (
                                     <div>
-                                        <div className="incoming-request-item">
-                                            <span className="incoming-request-name">{incomingRequests[0]}</span>
+                                        <div className="incoming-request-item">                                      
+                                            <span className="incoming-request-name">{incomingRequests[0]}</span>       
                                             <div className="incoming-request-actions">
                                                 <button 
                                                     onClick={() => handleAcceptRequest(incomingRequests[0])}
                                                     style={{
-                                                        backgroundColor: '#28a745',
+                                                        backgroundColor: '#28a745',                        //this button styling was wrtting by AI
                                                         color: 'white',
                                                         border: 'none',
                                                         padding: '6px 12px',
@@ -187,7 +187,7 @@ function FriendRequest({ loggedInUser, isOpen, setIsOpen })
                                                     ✓
                                                 </button>
                                                 <button 
-                                                    onClick={() => handleRejectRequest(incomingRequests[0])}
+                                                    onClick={() => handleRejectRequest(incomingRequests[0])}        //this button was styling wrtitten by AI
                                                     style={{
                                                         backgroundColor: '#dc3545',
                                                         color: 'white',
