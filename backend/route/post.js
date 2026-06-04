@@ -1,10 +1,25 @@
 import express from "express";
 import User_account from "../models/user.js";
 import { createDateFromMilitaryTime } from "../utils/timeUtils.js";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const dir = "uploads/";
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir);
+    cb(null, dir);
+  },
+  filename: (req, file, cb) => {
+    cb(null, `post_${Date.now()}${path.extname(file.originalname)}`);
+  }
+});
+const upload = multer({ storage });
 
 const router = express.Router();
 
-router.post("/create-post", async (req, res) => {
+router.post("/create-post", upload.single("image"), async (req, res) => {
   try {
     const {person, title, location, date, startTime, endTime } = req.body;
 
@@ -16,7 +31,8 @@ router.post("/create-post", async (req, res) => {
 
     // All times are stored in military time format (24-hour: HH:mm)
     // e.g., startTime: "14:30" (2:30 PM), endTime: "16:45" (4:45 PM)
-    user.posts.push({ title, location, date, startTime, endTime });
+    const imageUrl = req.file ? `http://localhost:3000/uploads/${req.file.filename}` : '';
+    user.posts.push({ title, location, date, startTime, endTime, image: imageUrl });
     await user.save();
 
     const createdPost = user.posts[user.posts.length - 1];

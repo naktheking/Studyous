@@ -17,6 +17,7 @@ const PostSchema = new mongoose.Schema(
     date: String,
     startTime: String,
     endTime: String,
+    image: { type: String, default: '' },
     reactions: { type: [ReactionSchema], default: [] },
     comments:  { type: [CommentSchema],  default: [] },
   },
