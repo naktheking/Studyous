@@ -14,7 +14,7 @@ describe("Login Interface", () => {
             })
 
         expect(result.status).toBe(201);
-        expect(result.body.username).toBe("Michael");
+        expect(result.body.username).toBe("Michael"); //Gen AI for debugging?
 
         const resultRem = await request(app)
             .post("/account/remove-account")

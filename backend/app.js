@@ -24,6 +24,10 @@ mongoose.connect(process.env.MONGODB_URI)
  .then(() => console.log("Connected to MongoDB"))
  .catch((err) => console.log(err));
 
+app.get("/", (req, res) => {
+  res.status(200).send("OK");
+}); //MAYBE REMOVE LATER
+
 app.use("/account", accountRouter);
 app.use("/post", postRouter);
 app.use("/friend", friendRouter);

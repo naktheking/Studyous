@@ -1,0 +1,12 @@
+{
+    "scripts": {
+        "e2e": "playwright test"
+    },
+    "devDependencies": {
+        "@playwright/test": "^1.60.0"
+    },
+    "dependencies": {
+        "dotenv": "^17.4.2",
+        "mongoose": "^9.6.3"
+    }
+}
