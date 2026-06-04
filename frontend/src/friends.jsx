@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 
-function FriendRequest({ loggedInUser })
+function FriendRequest({ loggedInUser, isOpen, setIsOpen })
 {
     const [username, setUsername] = useState('');
     const [sendRequest, setSendRequest] = useState(false);
     const [incomingRequests, setIncomingRequests] = useState([]);
     const [friends, setFriends] = useState([]);
-    const [isOpen, setIsOpen] = useState(false);
+    const [requestMessage, setRequestMessage] = useState('');
 
     useEffect(() => {
         // Fetch incoming friend requests and friend list when user logs in
@@ -49,26 +49,33 @@ function FriendRequest({ loggedInUser })
 
     const handleSendFriendRequest = async () => {
         try {
+            if (friends.includes(username)) {
+                setRequestMessage(`${username} is already your friend.`);
+                setUsername('');
+                return;
+            }
+
             const response = await fetch('http://localhost:3000/friend/send-request', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
+                body: JSON.stringify({
                     fromUsername: loggedInUser,
-                    toUsername: username 
+                    toUsername: username
                 })
             });
 
             const data = await response.json();
 
             if (data.success) {
-                console.log('Friend request sent successfully!');
+                setRequestMessage(`Friend request sent to ${username}!`);
                 setUsername('');
                 setSendRequest(false);
             } else {
-                console.error('Error:', data.error);
+                setRequestMessage(data.message || 'Failed to send friend request.');
             }
         } catch (err) {
             console.error('Error sending friend request:', err);
+            setRequestMessage('Error sending friend request.');
         }
     };
 
@@ -141,7 +148,7 @@ function FriendRequest({ loggedInUser })
                                     value={username}
                                     onChange={(e) => setUsername(e.target.value)}
                                 />
-                            <button 
+                            <button
                                     onClick={handleSendFriendRequest}
                                     disabled={!username}
                                     style={{
@@ -151,6 +158,12 @@ function FriendRequest({ loggedInUser })
                             >
                                 Send
                             </button>
+
+                            {requestMessage && (
+                                <p style={{ fontSize: '13px', marginTop: '6px', color: requestMessage.includes('sent to') ? '#28a745' : '#dc3545' }}>
+                                    {requestMessage}
+                                </p>
+                            )}
 
                             <div style={{ marginTop: '20px' }}>
                                 <h3 className="incoming-requests-title">Incoming Friend Requests</h3>

@@ -1,0 +1,70 @@
+Prompt: can u make it so that for posts the times are all saved in military time?
+
+
+Response: I'll help you update the codebase to use military time (24-hour format) for posts and the old post clearing feature. Let me first explore the relevant files to understand the current implementation.
+
+First, I'll create a utility function for military time formatting on the backend
+(generates timeUtils.js and calls the functions in post.js)
+Done! I've implemented military time (24-hour format) throughout your codebase:
+Backend
+Created timeUtils.js - Utility functions for military time handling
+Updated post.js:
+Added military time utility imports
+Added clarifying comments (e.g., "14:30" = 2:30 PM)
+
+Reflection: I used AI here because I thought to get the current time there was some special library I had to import.
+It turns out there wasn't so I just went in and looked at the logic of the timeUtils.js file. Then I went onto the website 
+and tested a bunch of dates after 11:59AM, and then went onto the database to see if it stored correctly. It did.
+
+
+
+
+Prompt: can u just make it stored as military time, but when displaying it in the feed it is still regular time
+
+Response: I'll create a utility function to convert military time to 12-hour format and update the frontend display components to use it.
+
+Done! Now times are stored in military format (24-hour) but displayed in regular 12-hour format (with AM/PM) in the feeds.
+
+Created timeUtils.js - Conversion function to display military time as 12-hour format (e.g., "14:30" → "2:30 PM")
+Updated FriendsFeed.jsx - Uses convertToTwelveHour() to display times as 12-hour
+Updated history.jsx - Uses convertToTwelveHour() for 12-hour display
+Updated statistics.jsx - Uses convertToTwelveHour() for 12-hour display
+
+Reflection: I looked at the code and compared it to the backend timeUtils.js. The on in the frontend reversed it back from 
+military time correctly. I thought I was going to have to actually imcorporate the functions into my other jsx files but it did them for me.
+I went back onto the website and went on a friended account to see if the post display was correct. It was.
+
+
+
+
+Prompt: can u make all the post related features a solid background color? like white? with 75% opacity?
+
+Response: I'll add white backgrounds with 75% opacity to all post-related elements. Let me update the CSS:
+
+Done! I've updated all post-related elements to have a solid white background with 75% opacity:
+
+Updated elements:
+
+.feed-post - Individual posts in the feed
+.post - Post items in history/stats views
+.post_info - Post container for history/stats
+.post-form - Post creation form
+.emoji-btn - Emoji reaction buttons
+.reaction-chip - Reaction summary chips
+.comment-input - Comment input field
+.form-group input - Form inputs in the post form
+All post-related features now have a consistent white background with 75% opacity, which provides good visibility while showing the background image through the semi-transparent overlay.
+
+Reflection:
+I went over the CSS changes it made and it looked relatively correct, but I wasn't sure because we never went over CSS in the class.
+However I went on the website and the words were a little hard to read because the opacity was too low.
+
+
+Prompt: make it more like 85% opacity
+
+response:
+Done! Updated all post-related elements to 85% opacity for better visibility of the background image.
+
+Reflection: I made sure I turned all the 75's in the CSS file to 85s, and then went onto the website to check again. The opacity was the way I liked it to be.
+
+

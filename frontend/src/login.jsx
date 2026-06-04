@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-function Login({ setIsLoggedIn, setLoggedInUser, setUsername, username }) {
+function Login({ setIsLoggedIn, setLoggedInUser, setUsername, username, setProfilePic }) {
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
     const handleSignup = async (e) => {
@@ -31,7 +31,7 @@ function Login({ setIsLoggedIn, setLoggedInUser, setUsername, username }) {
         e.preventDefault();
     
         try {
-            const response = await fetch(`http://localhost:3000/account/get-account?username=${username}`, {
+            const response = await fetch(`http://localhost:3000/account/get-account?username=${username}`,{ 
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         });
@@ -42,11 +42,14 @@ function Login({ setIsLoggedIn, setLoggedInUser, setUsername, username }) {
             setMessage('Login successful!');
             setLoggedInUser(username);
             setIsLoggedIn(true);
+            setProfilePic(data.profilePic || '');
             setUsername('');
             setPassword('');
+            console.log("user logged in");
         } 
         else {
             setMessage('User not found');
+            console.log("User not found");
         }
         } catch (err) {
             setMessage('Error: ' + err.message);
@@ -54,8 +57,8 @@ function Login({ setIsLoggedIn, setLoggedInUser, setUsername, username }) {
     };
 
     return(
-        <form onSubmit={handleSignup}>
-          <h2>Create Account</h2>
+        <form className="login-form" onSubmit={handleSignup}>
+          <h2>Create Account/Sign in</h2>
           <input
             type="text"
             placeholder="Username"
@@ -68,9 +71,11 @@ function Login({ setIsLoggedIn, setLoggedInUser, setUsername, username }) {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <button type="submit">Sign Up</button>
-          <button type="button" onClick={handleLogin}>Login</button>
-          {message && <p>{message}</p>}
+          <div className="login-actions">
+            <button type="submit" className="login-btn login-btn--primary">Sign Up</button>
+            <button type="button" className="login-btn login-btn--secondary" onClick={handleLogin}>Login</button>
+          </div>
+          {message && <p className="login-message">{message}</p>}
         </form>
     )
 
