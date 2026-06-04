@@ -166,7 +166,7 @@ setProfilePics(pics);
               <p className="feed-post-detail">{post.location}</p>
               <p className="feed-post-detail">{post.date}</p>
               {/* Times stored in military format but displayed in 12-hour format */}
-              <p className="feed-post-detail">{convertToTwelveHour(post.startTime)} – {convertToTwelveHour(post.endTime)}</p>
+              <p className="feed-post-detail">{convertToTwelveHour(post.startTime)} – {convertToTwelveHour(post.endTime)}</p>   //This line was written by AI, refer to prompt2
 
               <div className="reaction-bar">
                 <div className="emoji-buttons">
