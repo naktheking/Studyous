@@ -25,6 +25,33 @@ describe("Login Interface", () => {
         expect(resultRem.status).toBe(201);  
     });
 
+    test("Create and get account successfully", async () => {
+
+        const result = await request(app)
+            .post("/account/create-account")
+            .send({
+                username: "Carey",
+                password: "Nachenberg"
+            })
+
+        expect(result.status).toBe(201);
+        expect(result.body.username).toBe("Carey");
+
+        const resGet = await request(app)
+            .get("/account/get-account")
+            .query({
+                username: "Carey"
+            })
+        expect(resGet.status).toBe(200);
+
+        const resultRem = await request(app)
+            .post("/account/remove-account")
+            .send({
+                username: "Carey"
+            })
+        expect(resultRem.status).toBe(201);  
+    });
+
     test("Login successfully", async () => {
         const result = await request(app)
             .post("/account/create-account")
