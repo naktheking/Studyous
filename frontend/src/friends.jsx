@@ -166,16 +166,16 @@ function FriendRequest({ loggedInUser, isOpen, setIsOpen })
                             )}
 
                             <div style={{ marginTop: '20px' }}>
-                                <h3 className="incoming-requests-title">Incoming Friend Requests</h3>
+                                <h3 className="incoming-requests-title">Incoming Friend Requests</h3>               //The className was written by AI
                                 {incomingRequests.length > 0 ? (
                                     <div>
-                                        <div className="incoming-request-item">
-                                            <span className="incoming-request-name">{incomingRequests[0]}</span>
+                                        <div className="incoming-request-item">                                      //the className and styling is written by AI
+                                            <span className="incoming-request-name">{incomingRequests[0]}</span>       //the className and styling is written by AI
                                             <div className="incoming-request-actions">
                                                 <button 
                                                     onClick={() => handleAcceptRequest(incomingRequests[0])}
                                                     style={{
-                                                        backgroundColor: '#28a745',
+                                                        backgroundColor: '#28a745',                        //this button styling was wrtting by AI
                                                         color: 'white',
                                                         border: 'none',
                                                         padding: '6px 12px',
@@ -187,7 +187,7 @@ function FriendRequest({ loggedInUser, isOpen, setIsOpen })
                                                     ✓
                                                 </button>
                                                 <button 
-                                                    onClick={() => handleRejectRequest(incomingRequests[0])}
+                                                    onClick={() => handleRejectRequest(incomingRequests[0])}        //this button was styling wrtitten by AI
                                                     style={{
                                                         backgroundColor: '#dc3545',
                                                         color: 'white',

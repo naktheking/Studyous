@@ -1,9 +1,9 @@
 ___________________________________________________Larry Zhou__________________________________________________
 
-Prompt1: can u edit the CSS so that the post button is at the bottom of the screen and the friend username search 
+Prompt 1: can u edit the CSS so that the post button is at the bottom of the screen and the friend username search 
 bar is on the right side. make it like 40 pixels wide.
 
-Done! I've made the CSS updates:
+Response: Done! I've made the CSS updates:
 
 Post button at the bottom: Changed .logged-in-container to use justify-content: flex-end so the post form moves to the bottom of the 
 screen
@@ -17,7 +17,78 @@ too hard, but it is pretty convenient that I can ask AI to format things for me.
 
 
 
-Prompt 1: can u make it so that for posts the times are all saved in military time?
+prompt 2: Can u make the button to hide or show the friends UI a heart?:
+
+Response: Done! Added the heart button styline in App.css 13-210:
+
+Reflection:
+This was a pretty unecessary use of AI because the button didn't have to be a heart. I just thought it looked cool so I kept it.
+
+
+
+Prompt 3: Is it possible for you to make the display of friends list a scrollable Bar? make it 300 pxls long and the same width as all
+other friends features. I will need it later to display the list of friends.
+
+Response: Added a scrollable bar with className friendList in App.css
+
+Reflection:
+Again this wasn't a super necessary CSS addition. I just thought it could look cool, and I kept the CSS change. I basically used it by using 
+map function in Javascript to map all the list items into the display chunk.
+
+
+
+Prompt 4: okay now for every list item make it left adjusted without the bullet point. then have two buttons right adjusted. one is a green check mark for accept, 
+one is a red check mark for reject
+
+Response: 
+Done! I've updated both frontend and backend:
+
+Removed bullet points and replaced <ul><li> with flexbox layout
+Username is left-adjusted
+Green ✓ button (accept) and red ✕ button (reject) are right-adjusted
+
+<div>
+                                        <div className="incoming-request-item">                                      //the className and styling is written by AI
+                                            <span className="incoming-request-name">{incomingRequests[0]}</span>       //the className and styling is written by AI
+                                            <div className="incoming-request-actions">
+                                                <button 
+                                                    onClick={() => handleAcceptRequest(incomingRequests[0])}
+                                                    style={{
+                                                        backgroundColor: '#28a745',                        //this button styling was wrtting by AI
+                                                        color: 'white',
+                                                        border: 'none',
+                                                        padding: '6px 12px',
+                                                        borderRadius: '4px',
+                                                        cursor: 'pointer',
+                                                        fontSize: '16px'
+                                                    }}
+                                                >
+                                                    ✓
+                                                </button>
+                                                <button 
+                                                    onClick={() => handleRejectRequest(incomingRequests[0])}        //this button was styling wrtitten by AI
+                                                    style={{
+                                                        backgroundColor: '#dc3545',
+                                                        color: 'white',
+                                                        border: 'none',
+                                                        padding: '6px 12px',
+                                                        borderRadius: '4px',
+                                                        cursor: 'pointer',
+                                                        fontSize: '16px'
+                                                    }}
+                                                >
+                                                    ✕
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+Reflection: This was really needed because I had no clue how to make text left/right adjusted, or make these buttons. However I did have to make my own
+onClick handle functions for the acceptance and rejection. I just needed them to do the styling. I also made it only display the first element.
+
+
+
+Prompt 5: can u make it so that for posts the times are all saved in military time?
 
 
 Response: I'll help you update the codebase to use military time (24-hour format) for posts and the old post clearing
@@ -101,7 +172,7 @@ stored correctly. It did.
 
 
 
-Prompt 2: can u just make it stored as military time, but when displaying it in the feed it is still regular time
+Prompt 6: can u just make it stored as military time, but when displaying it in the feed it is still regular time
 
 Response: I'll create a utility function to convert military time to 12-hour format and update the frontend display components 
 to use it.
@@ -147,7 +218,7 @@ I did not end up adopting the changes in statstics.jsx
 
 
 
-Prompt 3: can u make all the post related features a solid background color? like white? with 75% opacity?
+Prompt 7: can u make all the post related features a solid background color? like white? with 75% opacity?
 
 Response: I'll add white backgrounds with 75% opacity to all post-related elements. Let me update the CSS:
 
@@ -172,7 +243,7 @@ However I went on the website and the words were a little hard to read because t
 
 
 
-Prompt 4: make it more like 85% opacity
+Prompt 8: make it more like 85% opacity
 
 response:
 Done! Updated all post-related elements to 85% opacity for better visibility of the background image.
@@ -190,7 +261,7 @@ Reflection: I was satisfied with the new font size for the username on the post 
 
 
 
-Prompt 5: the study stats log seems a bit bland. can u try and embelish it a bit?
+Prompt 9: the study stats log seems a bit bland. can u try and embelish it a bit?
 
 Response: Done! I've embellished the stats display with several improvements:
 
@@ -210,7 +281,7 @@ Relection: To be honest, I definately could have been more specific with the pro
 my creativity in design is lacking. 
 
 
-prompt 6: Can u add that purple border for the post UI and post history UI as well?
+prompt 10: Can u add that purple border for the post UI and post history UI as well?
 Done! I've added the purple border accent to all post-related UI elements:
 
 The changes are all made in App.css and Index.css
@@ -225,7 +296,7 @@ Reflection: At this point because I don't know CSS I have just gone wild with AI
 I kept this change.
 
 
-prompt 7: can u embelish the fonts for these too? And try some creative styling on the buttons and input bars
+prompt 11: can u embelish the fonts for these too? And try some creative styling on the buttons and input bars
 
 Done! I've significantly embellished the styling with:
 
