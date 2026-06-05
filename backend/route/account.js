@@ -135,6 +135,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
+// Saves uploaded files to the uploads/ folder, named as username_timestamp.ext so each file is unique
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const dir = "uploads/";
@@ -148,7 +149,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 
-
+// Accepts a single image file, saves it, and stores the public URL on the user's profile
 router.post("/upload-pic/:username", upload.single("profilePic"), async (req, res) => {
   try {
     const { username } = req.params;
@@ -156,6 +157,7 @@ router.post("/upload-pic/:username", upload.single("profilePic"), async (req, re
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
+// Stores the full localhost URL so the frontend can load it directly as an <img> src
     user.profilePic = `http://localhost:3000/uploads/${req.file.filename}`;
     await user.save();
     res.json({ profilePic: user.profilePic });
