@@ -17,6 +17,7 @@ function App() {
   const [friendPanelOpen, setFriendPanelOpen] = useState(false);
   const [profilePic, setProfilePic] = useState(''); //string for location of the profile picture
 
+  // after authenticating through Google OAuth, logs the user in, then cleans up the URL of the picture URL
 useEffect(() => {
   const params = new URLSearchParams(window.location.search);
   const user = params.get('user');
@@ -25,7 +26,7 @@ useEffect(() => {
     setLoggedInUser(user);
     setIsLoggedIn(true);
     if (pic) setProfilePic(decodeURIComponent(pic));
-    window.history.replaceState({}, '', '/');
+    window.history.replaceState({}, '', '/');  // removes query params from the URL
   }
 }, []);
 
@@ -36,9 +37,10 @@ useEffect(() => {
         {isLoggedIn && (
   <div className="user-section">
     <div className="profile-pic-wrapper">
+      {/* Clicking the image opens the hidden file input */}
       <label htmlFor="pic-upload" style={{ cursor: 'pointer' }}>
         <img
-          src={profilePic || '/default-avatar.png'}
+          src={profilePic || '/default-avatar.png'} //falls to default-avatar.png if no photo selected
           alt="profile"
           className="profile-pic"
         />
@@ -58,6 +60,7 @@ useEffect(() => {
             body: formData
           });
           const data = await res.json();
+          // Updates state so the new pic shows immediately without a refresh
           if (data.profilePic) setProfilePic(data.profilePic);
         }}
       />

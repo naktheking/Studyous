@@ -591,3 +591,142 @@ Want me to spin up the app so you can eyeball it, or are you good to check it yo
 
 Reflection:
 The changes only changed css and nothing with the react. All changes are about font color and background colors and shadows. I thought the changes were reasonable and the outcome looks good so I approved the changes. 
+
+---------------- Ana Garcia Chavez ----------------------
+
+Prompt 1: Like feature backend route
+Prompt given: "i want to add a like feature to posts where clicking it again unlikes it, the post is stored in mongodb and the user is embeded in the document. write tests first for the cases of liking a post increments the likes array with the username liking the same post again removes the username from the array liking a post that doesnt exist returns a 404"
+Response:
+test("liking a post adds username to likes array", async () => {
+  const res = await request(app)
+    .post(`/post/like-post/${testPost._id}`)
+    .send({ username: "testuser" });
+  expect(res.body.likes).toContain("testuser");
+});
+
+test("liking the same post again removes username", async () => {
+  await request(app).post(`/post/like-post/${testPost._id}`).send({ username: "testuser" });
+  const res = await request(app).post(`/post/like-post/${testPost._id}`).send({ username: "testuser" });
+  expect(res.body.likes).not.toContain("testuser");
+});
+
+test("liking a post that doesnt exist returns 404", async () => {
+  const res = await request(app).post("/post/like-post/000000000000").send({ username: "testuser" });
+  expect(res.status).toBe(404);
+});
+This is the implementation it gave me:
+const alreadyLiked = post.likes.includes(username);
+if (alreadyLiked) {
+  post.likes = post.likes.filter(u => u !== username);
+} else {
+  post.likes.push(username);
+}
+await post.save();
+res.json({ likes: post.likes, likeCount: post.likes.length });
+Reflection: Asking for tests before the implementation was way more effective than just asking for the feature. When I reviewed the tests I noticed the case of an old post with no likes field was missing so I added that test myself which revealed a bug where the route crashed on undefined. I sent the stack trace back and it fixed it immediately with a one liner that initialized the array if it didnt exist. Overall, this ended up serving as a good example of a remediation loop improving the effectiveness of a program.
+
+Prompt 2: Profile picture upload
+Prompt given: "i want users to be able to upload a profile picture that gets saved on the server and the url gets stored in mongodb. write tests for the following, a successful upload returns the correct url in the response uploading for a user that doesnt exist returns a 404 the saved url is accessible from the uploads folder"
+Response:
+test("successful upload returns correct url", async () => {
+  const res = await request(app)
+    .post(`/account/upload-pic/testuser`)
+    .attach("profilePic", "test/fixtures/test-image.png");
+  expect(res.body.profilePic).toContain("http://localhost:3000/uploads/");
+});
+
+test("uploading for nonexistent user returns 404", async () => {
+  const res = await request(app)
+    .post("/account/upload-pic/nobody")
+    .attach("profilePic", "test/fixtures/test-image.png");
+  expect(res.status).toBe(404);
+});
+
+test("saved url contains the username", async () => {
+  const res = await request(app)
+    .post("/account/upload-pic/testuser")
+    .attach("profilePic", "test/fixtures/test-image.png");
+  expect(res.body.profilePic).toContain("testuser");
+});
+Here's the filename logic and the route it gave me:
+filename: (req, file, cb) => {
+  cb(null, `${req.params.username}_${Date.now()}${path.extname(file.originalname)}`);
+}
+
+user.profilePic = `http://localhost:3000/uploads/${req.file.filename}`;
+await user.save();
+res.json({ profilePic: user.profilePic });
+
+It also flagged that there was no file type validation meaning any file extension could be uploaded.
+Reflection: The security flag was really useful because I hadnt thought about that at all. I verified the implementation manually by uploading a picture and checking mongodb for the saved URL. The test first approach helped me catch that the route didnt handle a missing file gracefully which I fed back as a followup.
+
+Prompt 3: Google OAuth login
+Prompt given: "i want to add google login using passport. here is how my account route and server currently work (I linked the code/logic from the original login code from account.js). write tests for these cases: a new user logging in with google for the first time creates a new account in mongodb an existing user logging in finds their account and doesnt create a duplicate the redirect after login sends the correct username and pic as query params, flag any security issues you see"
+Response:
+test("new google user gets created in db", async () => {
+  const profile = { id: "123", emails: [{ value: "newuser@gmail.com" }] };
+  await handleGoogleLogin(profile);
+  const user = await User_account.findOne({ username: "newuser" });
+  expect(user).not.toBeNull();
+});
+
+test("existing google user is not duplicated", async () => {
+  const profile = { id: "123", emails: [{ value: "existing@gmail.com" }] };
+  await handleGoogleLogin(profile);
+  await handleGoogleLogin(profile);
+  const users = await User_account.find({ username: "existing" });
+  expect(users.length).toBe(1);
+});
+
+test("redirect includes correct username param", async () => {
+  const res = await request(app).get("/auth/google/callback?code=testcode");
+  expect(res.header.location).toContain("user=");
+});
+Then here's the callback redirect and the useEffect it gave me:
+res.redirect(`http://localhost:5173?user=${req.user.username}&pic=${encodeURIComponent(req.user.profilePic || '')}`);
+
+const params = new URLSearchParams(window.location.search);
+const user = params.get('user');
+if (user) {
+  setLoggedInUser(user);
+  setIsLoggedIn(true);
+  window.history.replaceState({}, '', '/');
+}
+It flagged that the session secret shouldnt be hardcoded and needed to go in the .env file.
+Reflection: I reviewed the generated auth flow carefully since OAuth is security-sensitive. One thing I caught on review was that server.js was importing auth.js twice, once as a side effect and once as a router, which I fixed after confirming it with Claude. The security flag about the session secret was valid and something I wouldnt have noticed on my own.
+
+Prompt 4 — Post image upload
+Prompt given: "i want to optionally attach an image to a post. write tests for these cases: creating a post with an image saves the url correctly in the embedded post document creating a post without an image still works and the image field defaults to empty string the image renders in the feed only when a url is present flag anything that could go wrong"
+Response:
+test("post with image saves url correctly", async () => {
+  const res = await request(app)
+    .post("/post/create-post")
+    .field("person", "testuser")
+    .field("title", "test post")
+    .attach("image", "test/fixtures/test-image.png");
+  expect(res.body.image).toContain("http://localhost:3000/uploads/");
+});
+
+test("post without image still creates successfully", async () => {
+  const res = await request(app)
+    .post("/post/create-post")
+    .send({ person: "testuser", title: "no image post", location: "Boelter", date: "2026-06-01", startTime: "10:00", endTime: "12:00" });
+  expect(res.body.image).toBe("");
+});
+Here's the key fetch change and the feed render it gave me:
+const formData = new FormData();
+formData.append('person', person);
+formData.append('title', title);
+if (image) formData.append('image', image);
+
+const response = await fetch('http://localhost:3000/post/create-post', {
+  method: 'POST',
+  body: formData
+});
+
+{post.image && (
+  <img src={post.image} alt="post" className="post-image" />
+)}
+It flagged that removing Content-Type: application/json from the headers was required or multer would fail to parse the file.
+Reflection: That header flag was critical because I had initially kept the old header which silently broke the upload. 
+Testing locally confirmed it only worked after removing it. The remediation loop was useful here too, when submit stopped working I pasted the 404 error back and Claude diagnosed that the backend needed a restart to pick up the multer changes.
