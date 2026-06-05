@@ -17,6 +17,19 @@ To install the necessary packages required for this application, first run the f
 npm install
 ```
 
+To install the necessary packages required to test the backend this application, run the following commands in your terminal from the Studyous directory:
+```bash
+cd tests
+npm install --save-dev supertest
+```
+
+To install the necessary packages required to run end-to-end tests for this application, run the following commands in your terminal from the Studyous directory:
+```bash
+cd tests
+npm install -D @playwright/test
+```
+
+
 **Setting Up .env**
 
 To set up your own connection to the MongoDB database and Google OAuth login, create a .env file in the Studyous root directory.
@@ -49,6 +62,19 @@ Once you have received the output `Connected to MongoDB`, switch to the second t
 
 Once the previous steps have been completed, enter the URL `http://localhost:5173/` in your preferred browser to view and interact with the application locally.
 
+**Testing the program**
+
+Once inside the Studyous directory, run the following commands to run backend tests:
+```bash
+   cd tests
+   npm run test
+```
+Once inside the Studyous directory, run the following commands to run end-to-end tests:
+```bash
+   cd tests
+   npm run e2e
+```
+
 ## Features
 
 **Login**
@@ -66,4 +92,22 @@ Once the previous steps have been completed, enter the URL `http://localhost:517
 - View your own past posts, as well as some statistics about your posting history.
 - Features your total number of posts, weekly streak and hours spent studying, and top studying location of all time.
 
+## Tests
+
+===Backend===
+**Accounts**
+-Tests the features of creating an account with a username and password, and logging in with those credentials
+
+**Friends**
+-Tests the features of sending a friend request, accepting a friend request, and rejecting a friend request
+
+**Posts**
+-Tests the feature of creating and getting posts
+
+===End-To-End===
+**Accounts**
+-Tests the UI interaction and overall functionality of creating an account with a username and password, and logging in with those credentials
+
+**Friends**
+-Tests the UI interaction and overall functionality of sending a friend request, accepting a friend request, and rejecting a friend request
 

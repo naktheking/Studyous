@@ -52,7 +52,7 @@ router.get("/get-requests/:username", async (req, res) => {
   }
 });
 
-router.get("/get-friends/:username", async (req, res) => {
+router.get("/get-friends/:username", async (req, res) => { 
   try {
     const user = await User_account.findOne({ username: req.params.username });
 

@@ -23,7 +23,7 @@ router.post("/create-account", async (req, res) => {
     console.log("Account created");
 
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 });
 
@@ -63,6 +63,30 @@ router.get("/get-account", async (req, res) => {
   }
 });
 
+router.post("/remove-account", async (req, res) => {
+  try {
+    const { username } = req.body;
+    const usern = { username };
+    
+    const existingAccount = await User_account.findOne({ username });
+
+    if (!existingAccount) {
+      return res.status(405).json({ error: "account does not exist" });
+    }
+
+    const deleteAcc = await User_account.deleteOne({ username: usern.username });
+    
+    if (!deleteAcc) {
+      return res.status(407).json({ error: "account not deleted" });
+    }
+
+    return res.status(201).json(existingAccount);
+
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+
+  }
+});
 
 
 router.post("/login", async (req, res) => {
