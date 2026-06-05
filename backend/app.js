@@ -35,7 +35,7 @@ mongoose.connect(process.env.MONGODB_URI)
 
 app.get("/", (req, res) => {
   res.status(200).send("OK");
-}); //AI???
+}); /*this section is from AI*/
 
 app.use("/account", accountRouter);
 app.use("/post", postRouter);

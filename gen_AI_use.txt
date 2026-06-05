@@ -475,3 +475,267 @@ Add overflow-y: auto and a max-height to .post_info:
 Reflection: Previously, the post history extended down the page, where it was cut off at the bottom. This prompt successfully converted
 the display into a scrolling list that can extend as more posts are added. I then manually set a height limit to the div so that it 
 no longer overlapped with the bottom buttons.
+
+___________________________________________________Ansh Singh__________________________________________________
+
+Prompt 1: anshadityasingh77@Anshs-MacBook-Pro tests % cd .. && cd backend && npm start
+
+> studyous@1.0.0 start
+> node server.js
+
+◇ injected env (1) from .env // tip: ⌘ suppress logs { quiet: true }
+Server running at http://localhost:3000
+Connected to MongoDB        VITE v8.0.10  ready in 421 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+  ➜  press h + enter to show help; Both start
+
+Response: Both servers start, but Playwright is likely waiting for:
+http://localhost:3000
+to return a successful response.
+Your backend may be running, but if it has no GET / route, Playwright may not treat it as ready.
+Add a simple health route to your backend:
+app.get("/", (req, res) => {
+ res.status(200).send("OK");
+});
+or change the Playwright backend URL to a real existing backend route that returns successfully.
+Then rerun:
+npx playwright test --headed
+
+Reflection: This response from AI was helpful in order to send a successful response from app.js in order for my tests to detect a successful connection. I could have thought of this aspect on my own.
+
+
+Prompt 2: anshadityasingh77@Anshs-MacBook-Pro backend % npm test
+
+> studyous@1.0.0 test
+> jest
+
+ FAIL  route/account.test.js
+  ● Test suite failed to run
+
+    Jest encountered an unexpected token
+
+    Jest failed to parse a file. This happens e.g. when your code or its dependencies use non-standard JavaScript syntax, or when Jest is not configured to support such syntax.
+
+    Out of the box Jest supports Babel, which will be used to transform your files into valid JS based on your Babel configuration.
+
+    By default "node_modules" folder is ignored by transformers.
+
+    Here's what you can do:
+     • If you are trying to use ECMAScript Modules, see https://jestjs.io/docs/ecmascript-modules for how to enable it.
+     • If you are trying to use TypeScript, see https://jestjs.io/docs/getting-started#using-typescript
+     • To have some of your "node_modules" files transformed, you can specify a custom "transformIgnorePatterns" in your config.
+     • If you need a custom transformation, specify a "transform" option in your config.
+     • If you simply want to mock your non-JS modules (e.g. binary assets) you can stub them out with the "moduleNameMapper" config option.
+
+    You'll find more details and examples of these config options in the docs:
+    https://jestjs.io/docs/configuration
+    For information about custom transformations, see:
+    https://jestjs.io/docs/code-transformation
+
+    Details:
+
+    /Users/anshadityasingh77/Desktop/Studyous/backend/route/account.js:1
+    import express from "express";
+    ^^^^^^
+
+    SyntaxError: Cannot use import statement outside a module
+
+      1 | const express = require("express");
+    > 2 | const accountRouter = require("./account");
+        |                       ^
+      3 |
+      4 | const app = express();
+      5 |
+
+      at ModuleExecutor.compile (node_modules/jest-runtime/build/index.js:2104:44)
+      at Object.require (route/app.js:2:23)
+      at Object.require (route/account.test.js:2:13)
+
+Test Suites: 1 failed, 1 total
+Tests:       0 total
+Snapshots:   0 total
+Time:        0.472 s
+Ran all test suites.
+
+
+Response: Your test is using CommonJS:
+
+const accountRouter = require("./account");
+
+but account.js uses ES modules:
+
+import express from "express";
+
+So Jest is mixing two module systems.
+
+Easiest fix: convert the test helper files to ES module style
+
+In route/app.js, change:
+
+const express = require("express");
+const accountRouter = require("./account");
+
+to:
+
+import express from "express";
+import accountRouter from "./account.js";
+
+const app = express();
+
+app.use(express.json());
+app.use("/account", accountRouter);
+
+export default app;
+
+Then in route/account.test.js, use:
+
+import request from "supertest";
+import app from "./app.js";
+
+describe("Account Routes", () => {
+  test("example POST test", async () => {
+    const res = await request(app)
+      .post("/account/something")
+      .send({
+        example: "input"
+      });
+
+    expect(res.status).toBe(200);
+  });
+});
+Also check package.json
+
+Since your backend files use import, your backend/package.json should probably have:
+
+{
+  "type": "module"
+}
+
+If it does not, add it near the top level of the JSON.
+
+The issue is not your route logic yet. Jest cannot even load account.js because the file uses import, while your test setup is trying to load it with require.
+
+Reflection: This AI response was useful since I did not know how to import supertest, which was needed for my backend tests to work. Additional responses in this response were not a major part of the main incorporation of my code. Those other aspects were implemented by me in relation to this project.
+
+Prompt 3: Without making the code you provide specific to my project, show how I can make my tests E2E
+
+Response: To make tests E2E, use a browser-testing tool like Playwright or Cypress. The test should interact with the app like a real user, not call backend routes directly.
+Example with Playwright:
+// tests/example.e2e.js
+
+import { test, expect } from "@playwright/test";
+
+test("user can create an account", async ({ page }) => {
+  await page.goto("http://localhost:5173");
+
+  await page.getByLabel("Username").fill("testuser");
+  await page.getByLabel("Password").fill("password123");
+
+  await page.getByRole("button", { name: "Create Account" }).click();
+
+  await expect(page.getByText("Account created")).toBeVisible();
+});
+
+Another generic E2E test:
+// tests/post.e2e.js
+
+import { test, expect } from "@playwright/test";
+
+test("user can create a post", async ({ page }) => {
+  await page.goto("http://localhost:5173");
+
+  await page.getByLabel("Username").fill("testuser");
+  await page.getByLabel("Password").fill("password123");
+  await page.getByRole("button", { name: "Log In" }).click();
+
+  await page.getByRole("link", { name: "New Post" }).click();
+
+  await page.getByLabel("Title").fill("Study session");
+  await page.getByLabel("Location").fill("Library");
+  await page.getByRole("button", { name: "Create Post" }).click();
+
+  await expect(page.getByText("Study session")).toBeVisible();
+});
+
+Install Playwright:
+npm install -D @playwright/test
+npx playwright install
+
+Add a script:
+"scripts": {
+  "e2e": "playwright test"
+}
+
+Run your app first in separate terminals:
+cd backend
+npm start
+
+cd frontend
+npm run dev
+
+Then run:
+npm run e2e
+
+The key difference:
+Backend test: request(app).post(...)
+E2E test: page.goto(...), fill inputs, click buttons, check UI
+
+Reflection: This AI response was helpful because I did not know how to appropriately include AI scripts for my tests, which is important to make the commands for testing work. Additional responses in this response were not a major part of the main incorporation of my code. Those other aspects were implemented by me in relation to this project.
+
+
+
+Prompt 4: Show what I should do
+
+Response: Do this in your `tests` folder.
+
+### 1. Create `jest.setup.js`
+
+```js
+// tests/jest.setup.js
+
+import dotenv from "dotenv";
+
+dotenv.config({ path: "../backend/.env" });
+```
+
+### 2. Create or update `jest.config.js`
+
+```js
+// tests/jest.config.js
+
+export default {
+  testMatch: ["<rootDir>/backendTests/**/*.test.js"],
+  setupFiles: ["<rootDir>/jest.setup.js"],
+  testEnvironment: "node"
+};
+```
+
+### 3. Update `tests/package.json`
+
+```json
+{
+  "scripts": {
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.config.js",
+    "e2e": "playwright test"
+  }
+}
+```
+
+### 4. In backend tests, import app normally
+
+```js
+import request from "supertest";
+import app from "../../backend/app.js";
+```
+
+Now run:
+
+```bash
+npm test
+```
+
+This should load `backend/.env` before your backend app tries to connect to MongoDB.
+
+Reflection: This AI response was useful because I did not know how to incorporate the right scripts for the tests and the right structure for configuring the tests. Additional responses in this response were not a major part of the main incorporation of my code. Those other aspects were implemented by me in relation to this project.
