@@ -468,3 +468,126 @@ Add overflow-y: auto and a max-height to .post_info:
 Reflection: Previously, the post history extended down the page, where it was cut off at the bottom. This prompt successfully converted
 the display into a scrolling list that can extend as more posts are added. I then manually set a height limit to the div so that it 
 no longer overlapped with the bottom buttons.
+
+
+---------------**Friend Request**----------------------------------
+prompt: In the friends side bar, can you make the text easier to see. Right now it's kind of hard to see since the color blends into the background. I want you to only change the css and nothing with the react code. Let me know if you have questions make no mistake.
+
+Response:
+I'll look at the friends sidebar file and its CSS to understand the current styling.
+
+Read friends.jsx
+Now let me find the CSS that styles these class names.
+
+Bash Find CSS files styling friends panel
+IN
+cd /Users/maxzhang/Desktop/Studyous/frontend && grep -rln "friend_req_bar\|friend-panel\|incoming-requests-title\|friend-list" src --include="*.css"
+
+OUT
+src/App.css
+Bash Find line numbers of friend CSS and variables
+IN
+grep -n "friend_req_bar\|friend-panel\|incoming-request\|friend-list\|friend-toggle\|--text\|--surface\|--background\|:root" src/App.css
+
+OUT
+9::root {
+27:  color: var(--text);
+72:  .friend-panel {
+79:.friend-panel {
+90:.friend_req_bar{
+102:.friend_req_bar input {
+107:  background-color: var(--surface);
+108:  color: var(--text);
+111:.friend_req_bar button {
+116:  background-color: var(--surface);
+117:  color: var(--text);
+121:.incoming-requests-title {
+126:.incoming-request-item {
+135:.incoming-request-name {
+140:.incoming-request-actions {
+146:.friend-list-panel {
+151:.friend-list {
+159:  background-color: var(--surface);
+162:.friend-list-item {
+168:.friend-list-item:last-child {
+198:  color: var(--text);
+211:  color: var(--text);
+220:  color: var(--text);
+250:  color: var(--text);
+285:  color: var(--text);
+299:  color: var(--text);
+336:  color: var(--text);
+422:  color: var(--text);
+463:  background: var(--surface);
+484:.friend-toggle {
+617:    color: var(--text-h);
+710:  color: var(--text);
+762:  color: var(--text);
+794:  color: var(--text);
+865:  color: var(--text);
+957:  color: var(--text);
+989:  color: var(--text);
+1025:  color: var(--text-h);
+1031:  color: var(--text-h);
+1069:  color: var(--text);
+1074:  color: var(--text);
+Read App.css (lines 10-39)
+Let me find where the --text, --surface, --background variables are defined.
+
+Bash Find CSS variable definitions
+IN
+grep -rn "\-\-text:\|--surface:\|--background:\|--text-h:\|--bg:" src/*.css
+
+OUT
+src/index.css:2:  --text: #6b6375;
+src/index.css:3:  --text-h: #08060d;
+src/index.css:4:  --bg: #fff;
+src/index.css:35:    --text: #9ca3af;
+src/index.css:36:    --text-h: #f3f4f6;
+src/index.css:37:    --bg: #16171d;
+Read index.css
+Now let me look at the actual friends panel CSS section in App.css.
+
+Read App.css (lines 80-174)
+I now understand the problem. The friends panel text uses var(--text) — a muted gray (#6b6375 light / #9ca3af dark) — and the containers reference var(--surface), which is never defined anywhere, so they're transparent. That means the text sits directly on top of the translucent background image (#root::before at opacity: 0.5), which is exactly why it's hard to read.
+
+I'll fix this with CSS only, in two parts:
+
+Define the missing --surface variable (light + dark) so the panel/inputs/list get a solid, opaque backing instead of letting the background image bleed through.
+Give the floating panel a solid card background and bump the text to the higher-contrast --text-h color.
+Edit index.css
+Added 1 line
+Edit index.css
+Added 1 line
+Now the friends panel itself — give it a solid card background and stronger text contrast:
+
+Edit App.css
+Added 6 lines
+Edit App.css
+Modified
+The headings, names, list items, and "no requests/friends" text all inherit color, so they now pick up --text-h from the panel. Let me also bump the button text for consistency:
+
+Edit App.css
+Modified
+Done. All changes are CSS-only — no React code touched. Here's what I changed and why:
+
+Root cause: The panel referenced var(--surface) which was never defined, so the input, buttons, and friend list were transparent — the muted var(--text) color was being read against the translucent background image (#root::before at 50% opacity). That's what made it blend in.
+
+Changes:
+
+index.css — defined the missing --surface variable for both themes:
+
+Light: #ffffff
+Dark: #23252e
+App.css:
+
+.friend_req_bar — gave the whole floating panel a solid --surface background, border, rounded corners, and shadow so it reads as an opaque card instead of sitting over the background image. Set its text to the high-contrast --text-h color, which all the headings, names, list items, and "No requests/No friends" text now inherit.
+.friend_req_bar input / button — switched text from the muted --text to --text-h, and gave the input a solid --bg background.
+The friend list (.friend-list) already referenced --surface, so it now renders with a real background too.
+
+One note: the JSX has an inline-style fallback on the Send button that also uses var(--surface)/var(--text) (friends.jsx:155-156) — that's React, so I left it alone, but it now resolves correctly because --surface is finally defined.
+
+Want me to spin up the app so you can eyeball it, or are you good to check it yourself?
+
+Reflection:
+The changes only changed css and nothing with the react. All changes are about font color and background colors and shadows. I thought the changes were reasonable and the outcome looks good so I approved the changes. 
