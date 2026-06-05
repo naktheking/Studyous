@@ -3,11 +3,11 @@ import { convertToTwelveHour } from './utils/timeUtils.js';
 
 function PostHistory({ history, setHistory, username }) {
   const [posts, setPosts] = useState([]);
-
   const EMOJIS = ['👍', '❤️', '😂', '😮', '🔥', '😢'];
 
   useEffect(() => {
     const fetchPosts = async (e) => {
+      // Request posts of logged-in user from server
       try {
         const response = await fetch(`http://localhost:3000/history/get-posts?username=${username}`, { 
         method: 'GET',
@@ -19,11 +19,12 @@ function PostHistory({ history, setHistory, username }) {
           console.error(err);
       }
     };
-    if (history) {
+    if (history) { // Only request posts once history is actually opened
       fetchPosts();
     }
   }, [username, history]);
 
+  // Total up amount of each reaction
   const getReactionSummary = (reactions = []) => {
     const counts = {};
     reactions.forEach(r => { counts[r.emoji] = (counts[r.emoji] || 0) + 1; });
@@ -36,12 +37,13 @@ function PostHistory({ history, setHistory, username }) {
       <div>
       {posts.map((post) => (
       <div key={post._id} className="post">
+        {/* Post content */} 
         <h4>{post.title}</h4>
         <p>{post.location}</p>
         <p>{post.date}</p>
         {/* Times stored in military format but displayed in 12-hour format */}
         <p>{convertToTwelveHour(post.startTime)} - {convertToTwelveHour(post.endTime)}</p>       {/*This line was written by AI refer to prompt 2.*/}
-
+          {/* If reactions exist, show section with reaction counter */} 
           {Object.keys(getReactionSummary(post.reactions)).length > 0 && (
             <div className="reaction-bar">
               <div className="reaction-summary">
@@ -53,6 +55,7 @@ function PostHistory({ history, setHistory, username }) {
           )}
 
         <div className="comments-section">
+          {/* If comments exist, display them below the post */} 
           {post.comments.length === 0 && <p className="no-comments">No comments yet.</p>}
           {post.comments.map(comment => (
             <div key={comment._id} className="comment-item">
