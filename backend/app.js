@@ -14,6 +14,7 @@ import authRouter from "./route/auth.js";
 dotenv.config();
 
 const app = express();  
+app.use("/uploads", express.static("uploads"));
 app.use(cors({
   origin: "http://localhost:5173",
   credentials: true
@@ -29,11 +30,13 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use("/uploads", express.static("uploads"));
-
 mongoose.connect(process.env.MONGODB_URI)
  .then(() => console.log("Connected to MongoDB"))
  .catch((err) => console.log(err));
+
+app.get("/", (req, res) => {
+  res.status(200).send("OK");
+}); //AI???
 
 app.use("/account", accountRouter);
 app.use("/post", postRouter);

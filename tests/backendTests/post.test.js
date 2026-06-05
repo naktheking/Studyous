@@ -67,7 +67,7 @@ describe("Posting", () => {
         expect(resultRem.status).toBe(201); 
     });
 
-    test("Cleaning up an old post", async () => {
+    test("Getting posts when multiple are present", async () => {
 
         const result = await request(app)
             .post("/account/create-account")
@@ -79,28 +79,39 @@ describe("Posting", () => {
         expect(result.status).toBe(201);
         expect(result.body.username).toBe("Sam");
 
-        const resultPost = await request(app)
+        const resultPost1 = await request(app)
             .post("/post/create-post")
             .send({
                 person: "Sam", 
-                title: "Testing Cleaning", 
+                title: "Testing Getting 1", 
                 location: "Hedrick", 
                 date: "03-02-2026", 
                 startTime: "5:07", 
                 endTime: "5:09"
             })
 
-        expect(resultPost.status).toBe(200);
+        expect(resultPost1.status).toBe(200);
 
-        const resultClean = await request(app)
-            .post("/post/cleanup-old-posts") //Gen AI for debugging?
+        const resultPost2 = await request(app)
+            .post("/post/create-post")
             .send({
+                person: "Sam", 
+                title: "Testing Getting 2", 
+                location: "Hedrick", 
+                date: "03-03-2026", 
+                startTime: "5:07", 
+                endTime: "5:09"
+            })
+
+        expect(resultPost2.status).toBe(200);
+
+        const resultGetPost = await request(app)
+            .get("/post/get-post") 
+            .query({
                 username: "Sam"
             })
 
-        expect(resultClean.status).toBe(200); 
-        expect(resultClean.body.success).toBe(true); 
-        expect(resultClean.body.removedPosts).toBeGreaterThan(0); 
+        expect(resultGetPost.status).toBe(200);
 
         const resultRem = await request(app)
             .post("/account/remove-account")
