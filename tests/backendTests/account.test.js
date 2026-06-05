@@ -1,4 +1,4 @@
-import request from "supertest";
+import request from "supertest"; /*this line is from AI*/
 import app from "../../backend/app.js"
 
 
@@ -14,7 +14,7 @@ describe("Login Interface", () => {
             })
 
         expect(result.status).toBe(201);
-        expect(result.body.username).toBe("Michael"); //Gen AI for debugging?
+        expect(result.body.username).toBe("Michael"); /*debugged this line with AI*/
 
         const resultRem = await request(app)
             .post("/account/remove-account")

@@ -1,10 +1,8 @@
-import { test, expect } from "@playwright/test"; //Include in AI Report?
-
-//CLEANUP: MAYBE????? AI
+import { test, expect } from "@playwright/test"; /*this line is from AI*/
 
 test.afterAll(async ({ request }) => {
     await request.post(
-      "http://localhost:3000/account/remove-account",
+      "http://localhost:3000/account/remove-account", /*URL from AI*/
         {
             data: {
                 username: "e2e-test-account"
@@ -15,7 +13,7 @@ test.afterAll(async ({ request }) => {
 
 test("User can create new account", async ({ page }) => {
     
-    await page.goto("http://localhost:5173/"); //Include in AI Report?
+    await page.goto("http://localhost:5173/"); /*this line from AI*/
   
     await page.getByPlaceholder("Username").fill("e2e-test-account");
 
@@ -30,7 +28,7 @@ test("User can create new account", async ({ page }) => {
 
 test("User can login", async ({ page }) => {
     
-    await page.goto("http://localhost:5173/"); //Include in AI Report?
+    await page.goto("http://localhost:5173/"); /*this line from AI*/
     
     await page.getByPlaceholder("Username").fill("e2e-test-account");
     
