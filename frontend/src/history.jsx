@@ -39,6 +39,7 @@ function PostHistory({ history, setHistory, username }) {
       <div key={post._id} className="post">
         {/* Post content */} 
         <h4>{post.title}</h4>
+        {post.image && <img src={post.image} style={{ width: '100px', height: '100px', objectFit: 'cover', display: 'block', margin: '0 auto'}}/>}
         <p>{post.location}</p>
         <p>{post.date}</p>
         {/* Times stored in military format but displayed in 12-hour format */}
