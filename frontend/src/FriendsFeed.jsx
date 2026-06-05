@@ -199,11 +199,11 @@ function FriendsFeed({ loggedInUser }) {
               <span className="feed-post-author">{post.author}</span>
             </div>
               <h4 className="feed-post-title">{post.title}</h4>
+              {post.image && <img src={post.image} alt="post" className="post-image" style={{ width: '100px', height: '100px', objectFit: 'cover', display: 'block', margin: '0 auto'}} />}
               <p className="feed-post-detail">{post.location}</p>
               <p className="feed-post-detail">{post.date}</p>
               {/* Times stored in military format but displayed in 12-hour format */}
               <p className="feed-post-detail">{convertToTwelveHour(post.startTime)} – {convertToTwelveHour(post.endTime)}</p>
-              {post.image && <img src={post.image} alt="post" className="post-image" />}
 
               <div className="reaction-bar">
                 <div className="emoji-buttons">
