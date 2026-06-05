@@ -27,8 +27,9 @@ function FriendsFeed({ loggedInUser }) {
           return;
         }
 
-        // Fetch one friend's posts and tag each post with its author.
-        // Returns [] if the request fails or the response isn't a post array.
+        //Fetch one friend's posts and tag each post with its author
+        //Returns [] if the request fails or the response isn't a post array
+        //Fetches one friend at a time
         const fetchPostsForFriend = async (friend) => {
           try {
             const res = await fetch(`http://localhost:3000/post/get-post?username=${friend}`);
@@ -71,7 +72,7 @@ function FriendsFeed({ loggedInUser }) {
   //Reactions
   const toggleReaction = async (post, emoji) => {
     try {
-      // Tell the backend this user tapped an emoji on this post
+      //Tell the backend this user tapped an emoji on this post
       const res = await fetch(`http://localhost:3000/post/react/${post.author}/${post._id}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -82,7 +83,7 @@ function FriendsFeed({ loggedInUser }) {
       //No reaction
       if (data.reactions === undefined) return;
 
-      // Swap in the updated reactions on the post we reacted to, leaving the rest untouched
+      //Swap in the updated reactions on the post we reacted to, leaving the rest untouched
       const updatePost = (p) => {
         const isTargetPost = p._id === post._id && p.author === post.author;
         return isTargetPost ? { ...p, reactions: data.reactions } : p;
@@ -116,7 +117,7 @@ function FriendsFeed({ loggedInUser }) {
       };
       setFeedPosts(prev => prev.map(updatePost));
 
-      // Clear this post's comment input box
+      //Clear this post's comment input box
       setCommentInputs(prev => ({ ...prev, [post._id]: '' }));
     } catch (err) {
       console.error('Error commenting:', err);
