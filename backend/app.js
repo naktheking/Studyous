@@ -6,7 +6,6 @@ import accountRouter from "./route/account.js";
 import postRouter from "./route/post.js";
 import friendRouter from "./route/friend.js";
 import historyRouter from "./route/history.js"
-import statsRouter from "./route/stats.js"
 import session from "express-session";
 import passport from "passport";
 import authRouter from "./route/auth.js";
@@ -42,7 +41,6 @@ app.use("/account", accountRouter);
 app.use("/post", postRouter);
 app.use("/friend", friendRouter);
 app.use("/history", historyRouter);
-app.use("/stats", statsRouter);
 app.use("/auth", authRouter);
 
 export default app;
