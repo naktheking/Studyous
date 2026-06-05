@@ -96,6 +96,12 @@
   right: 208px;
   top: 165px;
   width: 188px;
+  padding: 14px;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  color: var(--text-h);
   animation: slideIn 0.3s ease-out;
 }
 
@@ -104,8 +110,8 @@
   border: 1px solid var(--border);
   border-radius: 5px;
   font-size: 14px;
-  background-color: var(--surface);
-  color: var(--text);
+  background-color: var(--bg);
+  color: var(--text-h);
 }
 
 .friend_req_bar button {
@@ -114,7 +120,7 @@
   border-radius: 5px;
   font-size: 14px;
   background-color: var(--surface);
-  color: var(--text);
+  color: var(--text-h);
   cursor: pointer;
 }
 
