@@ -327,6 +327,7 @@ It's at this point here that the styling has gone too far. I was just having fun
 
 
 ----------------------****Styling Login****----------------------
+5.
 Prompt: Can you edit the css so that these 2 buttons are further apart and has a better visual than right now? (Context in login/sign up page)
 
 response:
@@ -348,6 +349,9 @@ The change wrapped the login and submit button in a login-form class and changed
 The css looked reasonable since it was only changing font, color, background, and border color
 I realized there was a background behind the login form and lite up with hovering which I personally didn't like since it looked like AI slop websites
 
+
+
+6.
 prompt: can you get rid of the black background and just have 2 buttons of login or sign up. Also avoid the light up when hovering
 
 Response:  Done. I removed:
@@ -358,6 +362,8 @@ What remains: the two distinct buttons (solid purple Sign Up, light outlined Log
 
 Reflection: I saw that it removed all background and hover components and didnt' remove anything other than the css files so I agreed with its changes.
 
+
+7.
 prompt: when a user sends a request but the firend isn't foudn, can you change the text of "User not found" to red. Can you also shift the whole friends tab down so it doens't overlap with the logout button
 
 Response: 

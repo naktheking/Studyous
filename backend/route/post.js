@@ -47,8 +47,8 @@ router.post("/create-post", upload.single("image"), async (req, res) => {
 
 router.get("/get-post", async (req, res) => {
   try {
-    const { username, person } = req.query;
-    const resolvedUsername = username || person;
+    const { username } = req.query;
+    const resolvedUsername = username;
     const user = await User_account.findOne({ username: resolvedUsername });
     if (!user) {
       console.log("User not found");
@@ -67,61 +67,8 @@ router.get("/get-post", async (req, res) => {
 
 
 
-router.post("/like-post/:postId", async (req, res) => {
-  try {
-    const { ownerUsername, postId } = req.params;
-    const { username, text } = req.body;
 
-    if (!text || !text.trim()) return res.status(400).json({ error: "Comment text required" });
-
-    const user = await User_account.findOne({ username: ownerUsername });
-    if (!user) return res.status(404).json({ error: "User not found" });
-
-    const post = user.posts.id(postId);
-    if (!post) return res.status(404).json({ error: "Post not found" });
-
-    post.comments.push({ username, text: text.trim() });
-    await user.save();
-    res.json({ comments: post.comments });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// Delete a comment (only the comment's author can delete it)
-router.delete("/comment/:ownerUsername/:postId/:commentId", async (req, res) => {
-  try {
-    const { ownerUsername, postId, commentId } = req.params;
-    const { username } = req.body;
-
-    const post = await Post.findById(postId);
-    if (!post) {
-      console.log("Post not found");
-      return res.status(404).json({ error: "Post not found" });
-    }
-    if (!post.likes) post.likes = [];
-    const alreadyLiked = post.likes.includes(username);
-
-    if (alreadyLiked) {
-      post.likes = post.likes.filter(u => u !== username);
-      console.log("Post unliked");
-    } else {
-      post.likes.push(username);
-      console.log("Post liked");
-    }
-
-    await post.save();
-    res.json({ likes: post.likes, likeCount: post.likes.length });
-
-    post.comments.pull(commentId);
-    await user.save();
-    res.json({ comments: post.comments });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// Toggle an emoji reaction on a post (one reaction per user; same emoji removes it)
+// Toggle an emoji reaction on a post (one reaction per user same emoji removes it)
 router.post("/react/:ownerUsername/:postId", async (req, res) => {
   try {
     const { ownerUsername, postId } = req.params;
@@ -134,13 +81,19 @@ router.post("/react/:ownerUsername/:postId", async (req, res) => {
     if (!post) return res.status(404).json({ error: "Post not found" });
 
     const existingIdx = post.reactions.findIndex(r => r.username === username);
+    //if user didn't react before
     if (existingIdx !== -1) {
+      //tapped the same emoji so removes it from post.
       if (post.reactions[existingIdx].emoji === emoji) {
         post.reactions.splice(existingIdx, 1);
-      } else {
+      } 
+      //different emoji
+      else {
         post.reactions[existingIdx].emoji = emoji;
       }
-    } else {
+    } 
+    //if user has reacted before
+    else {
       post.reactions.push({ username, emoji });
     }
 
@@ -157,7 +110,10 @@ router.post("/comment/:ownerUsername/:postId", async (req, res) => {
     const { ownerUsername, postId } = req.params;
     const { username, text } = req.body;
 
-    if (!text || !text.trim()) return res.status(400).json({ error: "Comment text required" });
+    //comments need to have non-white space characters
+    if (!text || !text.trim()) {
+      return res.status(400).json({ error: "Comment text required" });
+    }
 
     const user = await User_account.findOne({ username: ownerUsername });
     if (!user) return res.status(404).json({ error: "User not found" });
@@ -165,7 +121,7 @@ router.post("/comment/:ownerUsername/:postId", async (req, res) => {
     const post = user.posts.id(postId);
     if (!post) return res.status(404).json({ error: "Post not found" });
 
-    post.comments.push({ username, text: text.trim() });
+    post.comments.push({ username, text: text });
     await user.save();
     res.json({ comments: post.comments });
   } catch (err) {
@@ -189,6 +145,7 @@ router.delete("/comment/:ownerUsername/:postId/:commentId", async (req, res) => 
     if (!comment) return res.status(404).json({ error: "Comment not found" });
     if (comment.username !== username) return res.status(403).json({ error: "Not your comment" });
 
+    //comment's author is verified
     post.comments.pull(commentId);
     await user.save();
     res.json({ comments: post.comments });

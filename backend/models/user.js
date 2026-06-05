@@ -28,10 +28,9 @@ const UserSchema = new mongoose.Schema(
   {
     username: String,
     password: String,
-    googleId: String,
-    profilePic: { type: String, default: '' },
-    pendingFriendRequests: [String],
-    friendList: [String],
+    profilePic: { type: String, default: '' }, //Contains the path to profile picture
+    pendingFriendRequests: { type: [String], default: [] },
+    friendList: { type: [String], default: [] },
     posts: [PostSchema]
   }
 );

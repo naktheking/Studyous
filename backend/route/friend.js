@@ -26,7 +26,7 @@ router.post("/send-request", async (req, res) => {
 
     // Append fromUsername to toUser's pendingFriendRequests
     toUser.pendingFriendRequests.push(fromUsername);
-    await toUser.save();
+    await toUser.save(); //ensures friend request is saved in database
     console.log("Friend request sent");
     res.json({ success: true, message: "Friend request sent" });
   } catch (err) {
@@ -34,6 +34,8 @@ router.post("/send-request", async (req, res) => {
   }
 });
 
+
+//WHAT IS THIS 
 router.get("/get-requests/:username", async (req, res) => {
   try {
     const user = await User_account.findOne({ username: req.params.username });
@@ -66,6 +68,7 @@ router.get("/get-friends/:username", async (req, res) => {
   }
 });
 
+//ACCEPT OR REJECT FRIEND REQUEST
 router.post("/accept-request", async (req, res) => {
   try {
     const { toUsername, fromUsername } = req.body;

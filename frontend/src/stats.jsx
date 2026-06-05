@@ -4,9 +4,10 @@ function PostStats({ stats, setStats, username }) {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    const fetchPosts = async (e) => {
+    const fetchPosts = async () => {
+      // Request posts of logged-in user from server
       try {
-        const response = await fetch(`http://localhost:3000/stats/get-posts?username=${username}`, { 
+        const response = await fetch(`http://localhost:3000/history/get-posts?username=${username}`, { 
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
       });
@@ -16,7 +17,7 @@ function PostStats({ stats, setStats, username }) {
           console.error(err);
       }
     };
-    if (stats) {
+    if (stats) { // Only request posts once stats is actually opened
       fetchPosts();
     }
   }, [username, stats]);
@@ -95,6 +96,7 @@ function PostStats({ stats, setStats, username }) {
     const locations = new Map();
     console.log(locations);
     
+    // Store each location and number of times listed in Map object
     posts.forEach(post => {
       console.log(post.location);
       if (locations.has(post.location)) {
@@ -105,6 +107,7 @@ function PostStats({ stats, setStats, username }) {
       }
     });
 
+    // Determine most-listed location
     let out = "--";
     let max = 0;
     for (const [location, value] of locations) {
