@@ -115,3 +115,9 @@ Once inside the Studyous directory, run the following commands to run end-to-end
 **Friends**
 -Tests the UI interaction and overall functionality of sending a friend request, accepting a friend request, and rejecting a friend request
 
+## UML Diagrams
+
+<img width="6025" height="6025" alt="Friend Request Management-2026-06-05-180641_page-0001" src="https://github.com/user-attachments/assets/864bf715-7377-4e46-ae7f-9b2154b27fef" />
+<img width="1068" height="1094" alt="IMG_0883" src="https://github.com/user-attachments/assets/9ce99d87-af3f-4cfc-8c51-42ad5038ad19" />
+<img width="1062" height="583" alt="IMG_0884" src="https://github.com/user-attachments/assets/ff0eae3f-8fcf-4280-adb1-65154e1d4caf" />
+
