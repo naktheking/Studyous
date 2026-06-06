@@ -1,26 +1,8 @@
 import { useState, useEffect } from 'react';
+import usePosts from './utils/usePosts.js';
 
 function PostStats({ stats, setStats, username }) {
-  const [posts, setPosts] = useState([]);
-
-  useEffect(() => {
-    const fetchPosts = async () => {
-      // Request posts of logged-in user from server
-      try {
-        const response = await fetch(`http://localhost:3000/history/get-posts?username=${username}`, { 
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
-      });
-        const userData = await response.json();
-        setPosts(userData.posts);
-      } catch (err) {
-          console.error(err);
-      }
-    };
-    if (stats) { // Only request posts once stats is actually opened
-      fetchPosts();
-    }
-  }, [username, stats]);
+  const posts = usePosts('http://localhost:3000/history/get-posts', stats, username);
 
   function getTime(posts) {
     const startTimes = [];

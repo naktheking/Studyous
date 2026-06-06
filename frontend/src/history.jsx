@@ -1,28 +1,10 @@
 import { useState, useEffect } from 'react';
 import { convertToTwelveHour } from './utils/timeUtils.js';
+import usePosts from './utils/usePosts.js';
 
 function PostHistory({ history, setHistory, username }) {
-  const [posts, setPosts] = useState([]);
+  const posts = usePosts('http://localhost:3000/history/get-posts', history, username);
   const EMOJIS = ['👍', '❤️', '😂', '😮', '🔥', '😢'];
-
-  useEffect(() => {
-    const fetchPosts = async (e) => {
-      // Request posts of logged-in user from server
-      try {
-        const response = await fetch(`http://localhost:3000/history/get-posts?username=${username}`, { 
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
-      });
-        const userData = await response.json();
-        setPosts(userData.posts);
-      } catch (err) {
-          console.error(err);
-      }
-    };
-    if (history) { // Only request posts once history is actually opened
-      fetchPosts();
-    }
-  }, [username, history]);
 
   // Total up amount of each reaction
   const getReactionSummary = (reactions = []) => {
