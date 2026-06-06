@@ -20,13 +20,17 @@ npm install
 To install the necessary packages required to test the backend this application, run the following commands in your terminal from the Studyous directory:
 ```bash
 cd tests
+npm install
+npm install --save-dev jest
 npm install --save-dev supertest
 ```
 
 To install the necessary packages required to run end-to-end tests for this application, run the following commands in your terminal from the Studyous directory:
 ```bash
 cd tests
+npm install
 npm install -D @playwright/test
+npx playwright install
 ```
 
 
