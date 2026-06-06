@@ -5,10 +5,6 @@ function PostStats({ stats, setStats, username }) {
   const posts = usePosts('http://localhost:3000/history/get-posts', stats, username);
 
   function getTime(posts) {
-    const startTimes = [];
-    const endTimes = [];
-    const dates = [];
-    let hours = 0;
     let minutes = 0;
     const now = new Date();
 
@@ -16,38 +12,27 @@ function PostStats({ stats, setStats, username }) {
     const currentDay = now.getDay();
     const daysFromMonday = currentDay === 0 ? 6 : currentDay - 1; // Monday is 0
     const weekStart = new Date(now);
-    console.log(daysFromMonday);
     weekStart.setDate(now.getDate() - daysFromMonday);
     weekStart.setHours(0, 0, 0, 0);
 
-    for (let i = 0; i < posts.length; i++) {
-      startTimes.push(posts[i].startTime);
-      endTimes.push(posts[i].endTime);
-      dates.push(posts[i].date);
-    }
-
-    // Parse military time format (HH:mm) and calculate total study time for this week
-    // Only count posts where the end time has already passed and the post is from this week
-    for (let j = 0; j < startTimes.length; j++) {
-      // Create a date object from the post's date and end time
-      const postEndDateTime = new Date(`${dates[j]} ${endTimes[j]}`);
-      const postDate = new Date(dates[j] + "T00:00:00"); // makes it so it is LOCAL time.
+    posts.forEach(post => {
+      const postEndDateTime = new Date(`${post.date} ${post.endTime}`);
+      const postDate = new Date(post.date + "T00:00:00"); // makes it so it is LOCAL time.
       postDate.setHours(0, 0, 0, 0);
-      
+
       // Only count this post if it has already ended AND is from this week
       if (postEndDateTime <= now && postDate >= weekStart) {
-        let startMins = (parseInt(startTimes[j].slice(0, 2)) * 60) + parseInt(startTimes[j].slice(3, 5));
-        let endMins = (parseInt(endTimes[j].slice(0, 2)) * 60) + parseInt(endTimes[j].slice(3, 5));
+        let startMins = (parseInt(post.startTime.slice(0, 2)) * 60) + parseInt(post.startTime.slice(3, 5));
+        let endMins = (parseInt(post.endTime.slice(0, 2)) * 60) + parseInt(post.endTime.slice(3, 5));
 
         minutes += endMins - startMins;
       }
-    }
+    })
 
-    hours = Math.floor(minutes / 60);
+    const hours = Math.floor(minutes / 60);
     minutes = minutes % 60;
 
-    const out = "Overall time studied: " + hours + " hours, " + minutes + " minutes";
-    return out;
+    return `${hours} hours, ${minutes} minutes`;
   }
 
   function getWeeklyStreak(posts) {
@@ -75,12 +60,9 @@ function PostStats({ stats, setStats, username }) {
   }
 
   function getLocation(posts) {
+    // Count occurrences of submitted locations
     const locations = new Map();
-    console.log(locations);
-    
-    // Store each location and number of times listed in Map object
     posts.forEach(post => {
-      console.log(post.location);
       if (locations.has(post.location)) {
         locations.set(post.location, locations.get(post.location) + 1);
       }
@@ -89,7 +71,7 @@ function PostStats({ stats, setStats, username }) {
       }
     });
 
-    // Determine most-listed location
+    // Determine and return most frequently submitted location
     let out = "--";
     let max = 0;
     for (const [location, value] of locations) {
@@ -122,7 +104,7 @@ function PostStats({ stats, setStats, username }) {
             <div className="stat-icon">⏱️</div>
             <div className="stat-content">
               <p className="stat-label">Time Studied This Week</p>
-              <p className="stat-value">{getTime(posts).replace("Overall time studied: ", "")}</p>
+              <p className="stat-value">{getTime(posts)}</p>
             </div>
           </div>
         </div>
