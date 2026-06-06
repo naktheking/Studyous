@@ -1,4 +1,5 @@
 {
+    "type": "module",
     "scripts": {
         "e2e": "playwright test",
         "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.config.js"

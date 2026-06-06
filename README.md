@@ -27,6 +27,7 @@ To install the necessary packages required to run end-to-end tests for this appl
 ```bash
 cd tests
 npm install -D @playwright/test
+npx playwright install
 ```
 
 
